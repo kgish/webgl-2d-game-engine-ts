@@ -1,34 +1,69 @@
-const CANVAS_HEIGHT = 480;
-const CANVAS_WIDTH = 680;
+/*
+ * File: core.ts
+ *
+ * The inner most core of the engine we will build
+ */
 
+// import all symbols that are exported from vertex_buffer.js, as symbols under the module "vertexBuffer"
+//
+import * as vertexBuffer from "./vertex_buffer";
+import * as simpleShader from "./shader_support";
+
+// variables
+// 
+// The graphical context to draw to
 let mGL: WebGL2RenderingContext | null;
 
-export const getGL = () => mGL;
+// Convention: variable in a module: mName
+export function getGL() {
+    if (!mGL) {
+       throw new Error("Failed to get WebGL2RenderingContext!");
+    }
 
-export function initWebGL() {
-    const canvas = document.getElementsByTagName('canvas')[0] as HTMLCanvasElement;
-    mGL = canvas.getContext('webgl2') || canvas.getContext('experimental-webgl2');
+    return mGL;
+}
 
+// initialize the WebGL
+export function initWebGL(htmlCanvasID: string) {
+    const canvas = document.getElementById(htmlCanvasID) as HTMLCanvasElement;
+
+    if (!canvas) {
+        throw new Error(`Cannot find canvas element with id='${htmlCanvasID}'`);
+    }
+
+    // Get the standard or experimental webgl and binds to the Canvas area
+    // store the results to the instance variable mGL
+    mGL = canvas.getContext("webgl2") || canvas.getContext("experimental-webgl2");
+
+    if (!mGL) {
+        throw new Error("WebGL2 is not supported!");
+    }
+
+    mGL.clearColor(0.0, 0.8, 0.0, 1.0);  // set the color to be cleared
+
+    // 1. initialize the buffer with the vertex positions for the unit square
+    vertexBuffer.init(); // This function is defined in the vertex_buffer.js file
+
+    // 2. now load and compile the vertex and fragment shaders
+    simpleShader.init("VertexShader", "FragmentShader");
+    // the two shaders are defined in the index.html file
+    // init() function is defined in shader_support.js file
+}
+
+// Clears the draw area and draws one square
+export function drawSquare() {
     if (mGL) {
-        mGL.canvas.height = CANVAS_HEIGHT;
-        mGL.canvas.width = CANVAS_WIDTH;
-        mGL.clearColor(0.0, 0.8, 0.0, 1.0);
-    } else {
-        handleError();
+        // Step A: Activate the shader
+        simpleShader.activate();
+
+        // Step B. draw with the above settings
+        mGL.drawArrays(mGL.TRIANGLE_STRIP, 0, 4);
     }
 }
 
+// Clears the canvas area
 export function clearCanvas() {
-    mGL && mGL.clear(mGL.COLOR_BUFFER_BIT);
-}
-
-function handleError() {
-    const error = 'WebGL2 is not supported!';
-    const el = document.getElementsByTagName('span')[0] as HTMLSpanElement;
-    if (el) {
-        el.textContent = error;
-        el.classList.remove('hidden');
-    } else {
-        alert(error);
+    if (mGL) {
+        mGL.clear(mGL.COLOR_BUFFER_BIT);      // clear to the color previously set
     }
 }
