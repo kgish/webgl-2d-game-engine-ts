@@ -23,6 +23,7 @@
     "watcherGlob": "**"
   },
   "devDependencies": {
+    "@parcel/transformer-glsl": "^2.3.1",
     "@parcel/transformer-sass": "^2.2.1",
     "@types/webgl2": "^0.0.6",
     "@typescript-eslint/eslint-plugin": "^5.10.2",
