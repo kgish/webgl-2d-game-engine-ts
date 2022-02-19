@@ -7,10 +7,10 @@
 import * as vertexBuffer from './vertex_buffer';
 import {SimpleShader} from './simple_shader';
 import {vertexShaderSource} from '../glsl_shaders/simple_vs_glsl';
-import {fragmentShaderSource} from '../glsl_shaders/white_fs_glsl';
+import {fragmentShaderSource} from '../glsl_shaders/simple_fs_glsl';
 
 // variables
-// 
+//
 // The graphical context to draw to
 let mGL: WebGL2RenderingContext | null;
 
@@ -48,7 +48,7 @@ function initWebGL(htmlCanvasID: string) {
 export function init(htmlCanvasID: string) {
     initWebGL(htmlCanvasID);    // setup mGL
     vertexBuffer.init();        // setup mGLVertexBuffer
-    createShader();             // create the shader 
+    createShader();             // create the shader
 }
 
 // Clears the draw area and draws one square
@@ -61,11 +61,11 @@ export function clearCanvas(color: GLclampf[]) {
 
 // function to draw a square
 // two steps to draw: activate the shader, and issue the gl draw command
-export function drawSquare() {
+export function drawSquare(color: number[]) {
 
     if (mShader && mGL) {
         // Step A: Activate the shader
-        mShader.activate();
+        mShader.activate(color);
 
         // Step B: Draw with the currently activated geometry and the activated shader
         mGL.drawArrays(mGL.TRIANGLE_STRIP, 0, 4);

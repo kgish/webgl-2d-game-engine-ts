@@ -4,7 +4,7 @@ class Game {
     constructor(canvasId: string) {
         engine.init(canvasId);
         engine.clearCanvas([0, 0.8, 0, 1]);
-        engine.drawSquare();
+        engine.drawSquare([1, 0, 0, 1]);
     }
 }
 

@@ -1,8 +1,8 @@
-/* 
+/*
  * File: simple_shader.ts
- * 
+ *
  * Defines the SimpleShader class
- * 
+ *
  */
 import * as core from './core';
 import * as vertexBuffer from './vertex_buffer';
@@ -13,15 +13,16 @@ export class SimpleShader {
     mVertexPositionRef: GLint; // reference to VertexPosition within the shader
     mVertexShader: WebGLShader | null;
     mFragmentShader: WebGLShader | null;
+    mPixelColorRef;
 
     constructor(vertexShaderSource: string, fragmentShaderSource: string) {
 
         const gl = core.getGL();
 
-        // 
-        // Step A: load and compile vertex and fragment shaders
+        // Step A: Load and compile vertex and fragment shaders
         this.mVertexShader = loadAndCompileShader(vertexShaderSource, gl.VERTEX_SHADER);
         this.mFragmentShader = loadAndCompileShader(fragmentShaderSource, gl.FRAGMENT_SHADER);
+        this.mPixelColorRef = null;
 
         // Step B: Create and link the shaders into a program.
         this.mCompiledShader = gl.createProgram();
@@ -33,7 +34,7 @@ export class SimpleShader {
         gl.attachShader(this.mCompiledShader, this.mFragmentShader);
         gl.linkProgram(this.mCompiledShader);
 
-        // Step C: check for error
+        // Step C: Check for error
         if (!gl.getProgramParameter(this.mCompiledShader, gl.LINK_STATUS)) {
             throw new Error('Shader linking failed with [' + vertexShaderSource + ' ' + fragmentShaderSource + '].');
         }
@@ -43,11 +44,14 @@ export class SimpleShader {
         if (this.mVertexPositionRef === null) {
             throw new Error('Cannot get WebGL attribute location!');
         }
+
+        // Step E: Gets uniform variable uPixelColor in fragment shader
+        this.mPixelColorRef = gl.getUniformLocation(this.mCompiledShader, 'uPixelColor');
     }
 
 
     // Activate the shader for rendering
-    activate() {
+    activate(pixelColor: number[]) {
         const gl = core.getGL();
         gl.useProgram(this.mCompiledShader);
 
@@ -60,6 +64,9 @@ export class SimpleShader {
             0,              // number of bytes to skip in between elements
             0);             // offsets to the first element
         gl.enableVertexAttribArray(this.mVertexPositionRef);
+
+        // load uniforms
+        gl.uniform4fv(this.mPixelColorRef, pixelColor);
     }
 }
 
@@ -67,7 +74,7 @@ export class SimpleShader {
 // Private methods not visible outside of this file
 // **------------------------------------
 
-// 
+//
 // Returns a compiled shader from a shader in the dom.
 // The id is the id of the script in the html tag.
 function loadAndCompileShader(shaderSource: string, shaderType: GLenum) {
@@ -104,4 +111,4 @@ function loadAndCompileShader(shaderSource: string, shaderType: GLenum) {
 // attempt to change name, e.g.,
 //      import SimpleShader as MyShaderName from './simple_shader.js';
 // will result in failure
-// 
+//

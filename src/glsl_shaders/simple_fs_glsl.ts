@@ -1,7 +1,9 @@
 export const fragmentShaderSource = `
 precision mediump float;
 
+uniform vec4 uPixelColor;
+
 void main(void) {
-    gl_FragColor = vec4(1.0, 1.0, 1.0, 1.0);
+    gl_FragColor = uPixelColor;
 }
 `;
