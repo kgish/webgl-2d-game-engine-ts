@@ -4,7 +4,7 @@
   "description": "WebGl2 2D Game Engine using TypeScript",
   "repository": {
     "type": "git",
-    "url": "https://github.com/kgish/webgl-2d-gsame-engine-ts.git"
+    "url": "https://github.com/kgish/webgl-2d-game-engine-ts.git"
   },
   "main": "index.js",
   "scripts": {
