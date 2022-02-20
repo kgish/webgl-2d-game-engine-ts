@@ -1,0 +1,16 @@
+html,
+body {
+  overflow: hidden;
+  user-select: none;
+  padding: 0;
+  margin: 0;
+}
+
+canvas {
+    position: absolute;
+  width: 50%;
+  height: 50%;
+  padding: 0;
+  top: 25%;
+  left: 25%;
+}
