@@ -1,4 +1,4 @@
-export const vertexShaderSource = `
+export const kSimpleVS = `
 attribute vec3 aVertexPosition;
 
 void main(void) {

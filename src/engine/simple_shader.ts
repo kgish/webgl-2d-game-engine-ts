@@ -1,11 +1,12 @@
 /*
  * File: simple_shader.ts
  *
- * Defines the SimpleShader class
+ * Defines the SimpleShader class.
  *
  */
-import * as core from './core';
-import * as vertexBuffer from './vertex_buffer';
+
+import * as glSys from './core/gl';
+import * as vertexBuffer from './core/vertex_buffer';
 
 export class SimpleShader {
 
@@ -17,7 +18,7 @@ export class SimpleShader {
 
     constructor(vertexShaderSource: string, fragmentShaderSource: string) {
 
-        const gl = core.getGL();
+        const gl = glSys.get();
 
         // Step A: Load and compile vertex and fragment shaders
         this.mVertexShader = loadAndCompileShader(vertexShaderSource, gl.VERTEX_SHADER);
@@ -52,7 +53,7 @@ export class SimpleShader {
 
     // Activate the shader for rendering
     activate(pixelColor: number[]) {
-        const gl = core.getGL();
+        const gl = glSys.get();
         gl.useProgram(this.mCompiledShader);
 
         // bind vertex buffer
@@ -78,7 +79,7 @@ export class SimpleShader {
 // Returns a compiled shader from a shader in the dom.
 // The id is the id of the script in the html tag.
 function loadAndCompileShader(shaderSource: string, shaderType: GLenum) {
-    const gl = core.getGL();
+    const gl = glSys.get();
 
     // Step B: Create the shader based on the shader type: vertex or fragment
     const compiledShader = gl.createShader(shaderType);
