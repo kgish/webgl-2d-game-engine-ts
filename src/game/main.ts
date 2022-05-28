@@ -8,6 +8,7 @@
 // client program simple import from engine/index.js for all engine symbols
 import * as engine from '../engine/index';
 import { Renderable } from '../engine';
+import { vec3, mat4 } from 'gl-matrix';
 
 class MyGame {
     mWhiteSq: Renderable;
@@ -26,11 +27,24 @@ class MyGame {
         // Step C: Draw!
         engine.clearCanvas([ 0, 0.8, 0, 1 ]);  // Clear the canvas
 
-        // Step C1: Draw Renderable objects with the white shader
-        this.mWhiteSq.draw();
+        // Create a new identity transform operator
+        const trsMatrix = mat4.create();
 
-        // Step C2: Draw Renderable objects with the red shader
-        this.mRedSq.draw();
+        // Step D: compute the white square transform
+        mat4.translate(trsMatrix, trsMatrix, vec3.fromValues(-0.25, 0.25, 0.0));
+        mat4.rotateZ(trsMatrix, trsMatrix, 0.2); // rotation is in radian
+        mat4.scale(trsMatrix, trsMatrix, vec3.fromValues(1.2, 1.2, 1.0));
+        // Step E: draw the white square with the computed transform
+        this.mWhiteSq.draw(trsMatrix);
+
+        // Step F: compute the red square transform
+        mat4.identity(trsMatrix); // restart
+        mat4.translate(trsMatrix, trsMatrix, vec3.fromValues(0.25, -0.25, 0.0));
+        mat4.rotateZ(trsMatrix, trsMatrix, -0.785); // rotation is in radian (about -45-degree)
+        mat4.scale(trsMatrix, trsMatrix, vec3.fromValues(0.4, 0.4, 1.0));
+        // Step G: draw the red square with the computed transform
+        this.mRedSq.draw(trsMatrix);
+
     }
 }
 

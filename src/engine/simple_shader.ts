@@ -7,14 +7,15 @@
 
 import * as glSys from './core/gl';
 import * as vertexBuffer from './core/vertex_buffer';
+import {mat4} from 'gl-matrix';
 
 export class SimpleShader {
-
     mCompiledShader: WebGLProgram | null;  // reference to the compiled shader in webgl context
     mVertexPositionRef: GLint; // reference to VertexPosition within the shader
     mVertexShader: WebGLShader | null;
     mFragmentShader: WebGLShader | null;
-    mPixelColorRef;
+    mPixelColorRef: WebGLUniformLocation | null;
+    mModelMatrixRef: WebGLUniformLocation | null;
 
     constructor(vertexShaderSource: string, fragmentShaderSource: string) {
 
@@ -23,7 +24,6 @@ export class SimpleShader {
         // Step A: Load and compile vertex and fragment shaders
         this.mVertexShader = loadAndCompileShader(vertexShaderSource, gl.VERTEX_SHADER);
         this.mFragmentShader = loadAndCompileShader(fragmentShaderSource, gl.FRAGMENT_SHADER);
-        this.mPixelColorRef = null;
 
         // Step B: Create and link the shaders into a program.
         this.mCompiledShader = gl.createProgram();
@@ -48,11 +48,12 @@ export class SimpleShader {
 
         // Step E: Gets uniform variable uPixelColor in fragment shader
         this.mPixelColorRef = gl.getUniformLocation(this.mCompiledShader, 'uPixelColor');
+        this.mModelMatrixRef = gl.getUniformLocation(this.mCompiledShader, 'uModelXformMatrix');
     }
 
 
     // Activate the shader for rendering
-    activate(pixelColor: number[]) {
+    activate(pixelColor: number[], trsMatrix: mat4) {
         const gl = glSys.get();
         gl.useProgram(this.mCompiledShader);
 
@@ -68,6 +69,7 @@ export class SimpleShader {
 
         // load uniforms
         gl.uniform4fv(this.mPixelColorRef, pixelColor);
+        gl.uniformMatrix4fv(this.mModelMatrixRef, false, trsMatrix);
     }
 }
 

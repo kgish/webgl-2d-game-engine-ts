@@ -8,6 +8,7 @@
 
 import * as glSys from './core/gl';
 import * as shaderResources from './core/shader_resources';
+import {mat4} from 'gl-matrix';
 
 export default class Renderable {
     mShader;
@@ -18,9 +19,9 @@ export default class Renderable {
         this.mColor = [ 1, 1, 1, 1 ];    // color of pixel
     }
 
-    draw() {
+    draw(trsMatrix: mat4) {
         const gl = glSys.get();
-        this.mShader.activate(this.mColor);
+        this.mShader.activate(this.mColor, trsMatrix);
         gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4);
     }
 
