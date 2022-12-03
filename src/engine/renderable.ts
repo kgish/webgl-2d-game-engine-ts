@@ -8,7 +8,7 @@
 
 import * as glSys from './core/gl';
 import * as shaderResources from './core/shader_resources';
-import {mat4} from 'gl-matrix';
+import { mat4 } from 'gl-matrix';
 
 export default class Renderable {
     mShader;

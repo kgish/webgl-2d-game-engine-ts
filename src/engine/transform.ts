@@ -5,7 +5,7 @@
  * Renderable
  */
 
-import { vec2, vec3, mat4 } from 'gl-matrix';
+import { mat4, vec2, vec3 } from 'gl-matrix';
 
 export class Transform {
 
@@ -19,47 +19,103 @@ export class Transform {
         this.mRotationInRad = 0.0;               // in radians!
     }
 
-    setPosition(xPos: number, yPos: number) { this.setXPos(xPos); this.setYPos(yPos); }
-    getPosition() { return this.mPosition; }
-    getXPos() { return this.mPosition[0]; }
-    setXPos(xPos: number) { this.mPosition[0] = xPos; }
-    incXPosBy(delta: number) { this.mPosition[0] += delta; }
-    getYPos() { return this.mPosition[1]; }
-    setYPos(yPos: number) { this.mPosition[1] = yPos; }
-    incYPosBy(delta: number) { this.mPosition[1] += delta; }
+    setPosition(xPos: number, yPos: number) {
+        this.setXPos(xPos);
+        this.setYPos(yPos);
+    }
+
+    getPosition() {
+        return this.mPosition;
+    }
+
+    getXPos() {
+        return this.mPosition[0];
+    }
+
+    setXPos(xPos: number) {
+        this.mPosition[0] = xPos;
+    }
+
+    incXPosBy(delta: number) {
+        this.mPosition[0] += delta;
+    }
+
+    getYPos() {
+        return this.mPosition[1];
+    }
+
+    setYPos(yPos: number) {
+        this.mPosition[1] = yPos;
+    }
+
+    incYPosBy(delta: number) {
+        this.mPosition[1] += delta;
+    }
 
     setSize(width: number, height: number) {
         this.setWidth(width);
         this.setHeight(height);
     }
-    getSize() { return this.mScale; }
+
+    getSize() {
+        return this.mScale;
+    }
+
     incSizeBy(delta: number) {
         this.incWidthBy(delta);
         this.incHeightBy(delta);
     }
-    getWidth() { return this.mScale[0]; }
-    setWidth(width: number) { this.mScale[0] = width; }
-    incWidthBy(delta: number) { this.mScale[0] += delta; }
-    getHeight() { return this.mScale[1]; }
-    setHeight(height: number) { this.mScale[1] = height; }
-    incHeightBy(delta: number) { this.mScale[1] += delta; }
+
+    getWidth() {
+        return this.mScale[0];
+    }
+
+    setWidth(width: number) {
+        this.mScale[0] = width;
+    }
+
+    incWidthBy(delta: number) {
+        this.mScale[0] += delta;
+    }
+
+    getHeight() {
+        return this.mScale[1];
+    }
+
+    setHeight(height: number) {
+        this.mScale[1] = height;
+    }
+
+    incHeightBy(delta: number) {
+        this.mScale[1] += delta;
+    }
+
     setRotationInRad(rotationInRadians: number) {
         this.mRotationInRad = rotationInRadians;
         while (this.mRotationInRad > (2 * Math.PI)) {
             this.mRotationInRad -= (2 * Math.PI);
         }
     }
+
     setRotationInDegree(rotationInDegree: number) {
         this.setRotationInRad(rotationInDegree * Math.PI / 180.0);
     }
+
     incRotationByDegree(deltaDegree: number) {
         this.incRotationByRad(deltaDegree * Math.PI / 180.0);
     }
+
     incRotationByRad(deltaRad: number) {
         this.setRotationInRad(this.mRotationInRad + deltaRad);
     }
-    getRotationInRad() {  return this.mRotationInRad; }
-    getRotationInDegree() { return this.mRotationInRad * 180.0 / Math.PI; }
+
+    getRotationInRad() {
+        return this.mRotationInRad;
+    }
+
+    getRotationInDegree() {
+        return this.mRotationInRad * 180.0 / Math.PI;
+    }
 
     // returns the matrix the concatenates the transformations defined
     getTRSMatrix() {

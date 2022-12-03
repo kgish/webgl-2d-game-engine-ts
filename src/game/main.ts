@@ -8,7 +8,7 @@
 // client program simple import from engine/index.js for all engine symbols
 import * as engine from '../engine/index';
 import { Renderable } from '../engine';
-import { vec3, mat4 } from 'gl-matrix';
+import { mat4, vec3 } from 'gl-matrix';
 
 class MyGame {
     mWhiteSq: Renderable;

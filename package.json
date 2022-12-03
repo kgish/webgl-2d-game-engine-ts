@@ -1,43 +1,43 @@
 {
-  "name": "webgl-2d-game-engine-ts",
-  "version": "0.0.1",
-  "description": "WebGl2 2D Game Engine using TypeScript",
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/kgish/webgl-2d-game-engine-ts.git"
-  },
-  "main": "index.js",
-  "scripts": {
-    "dev": "parcel index.html",
-    "build": "parcel build dist",
-    "lint": "eslint . --ext .ts && stylelint  \"**/*.scss\"",
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
-  "author": "Kiffin Gish <kiffin.gish@planet.nl> (https://github.com/kgish)",
-  "license": "MIT",
-  "parcelCleanPaths": [
-    "dist"
-  ],
-  "staticFiles": {
-    "staticPath": "public",
-    "watcherGlob": "**"
-  },
-  "dependencies": {
-    "gl-matrix": "^3.4.3"
-  },
-  "devDependencies": {
-    "@parcel/transformer-glsl": "^2.3.1",
-    "@parcel/transformer-sass": "^2.2.1",
-    "@types/webgl2": "^0.0.6",
-    "@typescript-eslint/eslint-plugin": "^5.10.2",
-    "@typescript-eslint/parser": "^5.10.2",
-    "eslint": "^8.8.0",
-    "eslint-plugin-no-loops": "^0.3.0",
-    "parcel": "^2.2.1",
-    "parcel-plugin-clean-easy": "^1.0.2",
-    "parcel-plugin-static-files-copy": "^2.6.0",
-    "stylelint": "^14.3.0",
-    "stylelint-config-standard-scss": "^3.0.0",
-    "typescript": "^4.5.5"
-  }
+    "name": "webgl-2d-game-engine-ts",
+    "version": "0.0.1",
+    "description": "WebGl2 2D Game Engine using TypeScript",
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/kgish/webgl-2d-game-engine-ts.git"
+    },
+    "main": "index.js",
+    "scripts": {
+        "dev": "parcel index.html",
+        "build": "parcel build dist",
+        "lint": "eslint . --ext .ts && stylelint  \"**/*.scss\"",
+        "test": "echo \"Error: no test specified\" && exit 1"
+    },
+    "author": "Kiffin Gish <kiffin.gish@planet.nl> (https://github.com/kgish)",
+    "license": "MIT",
+    "parcelCleanPaths": [
+        "dist"
+    ],
+    "staticFiles": {
+        "staticPath": "public",
+        "watcherGlob": "**"
+    },
+    "dependencies": {
+        "gl-matrix": "^3.4.3"
+    },
+    "devDependencies": {
+        "@parcel/transformer-glsl": "^2.8.0",
+        "@parcel/transformer-sass": "^2.8.0",
+        "@types/webgl2": "^0.0.6",
+        "@typescript-eslint/eslint-plugin": "^5.45.0",
+        "@typescript-eslint/parser": "^5.45.0",
+        "eslint": "^8.29.0",
+        "eslint-plugin-no-loops": "^0.3.0",
+        "parcel": "^2.8.0",
+        "parcel-plugin-clean-easy": "^1.0.2",
+        "parcel-plugin-static-files-copy": "^2.6.0",
+        "stylelint": "^14.16.0",
+        "stylelint-config-standard-scss": "^3.0.0",
+        "typescript": "^4.9.3"
+    }
 }

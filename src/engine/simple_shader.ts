@@ -7,7 +7,7 @@
 
 import * as glSys from './core/gl';
 import * as vertexBuffer from './core/vertex_buffer';
-import {mat4} from 'gl-matrix';
+import { mat4 } from 'gl-matrix';
 
 export class SimpleShader {
     mCompiledShader: WebGLProgram | null;  // reference to the compiled shader in webgl context
