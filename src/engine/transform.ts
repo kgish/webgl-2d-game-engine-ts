@@ -1,5 +1,5 @@
 /*
- * File: transform.js
+ * File: transform.ts
  *
  * Encapsulates the matrix transformation functionality, meant to work with
  * Renderable
@@ -7,16 +7,15 @@
 
 import { mat4, vec2, vec3 } from 'gl-matrix';
 
-export class Transform {
-
-    mPosition: vec2;
-    mScale: vec2;
-    mRotationInRad: number;
+class Transform {
+    mPosition: vec2;         // this is the translation
+    mScale: vec2;            // this is the width (x) and height (y)
+    mRotationInRad: number;  // in radians!
 
     constructor() {
-        this.mPosition = vec2.fromValues(0, 0);  // this is the translation
-        this.mScale = vec2.fromValues(1, 1);     // this is the width (x) and height (y)
-        this.mRotationInRad = 0.0;               // in radians!
+        this.mPosition = vec2.fromValues(0, 0);
+        this.mScale = vec2.fromValues(1, 1);
+        this.mRotationInRad = 0.0;
     }
 
     setPosition(xPos: number, yPos: number) {
@@ -24,13 +23,8 @@ export class Transform {
         this.setYPos(yPos);
     }
 
-    getPosition() {
-        return this.mPosition;
-    }
-
-    getXPos() {
-        return this.mPosition[0];
-    }
+    getPosition = () => this.mPosition;
+    getXPos = () => this.mPosition[0];
 
     setXPos(xPos: number) {
         this.mPosition[0] = xPos;
@@ -40,9 +34,7 @@ export class Transform {
         this.mPosition[0] += delta;
     }
 
-    getYPos() {
-        return this.mPosition[1];
-    }
+    getYPos = () => this.mPosition[1];
 
     setYPos(yPos: number) {
         this.mPosition[1] = yPos;
@@ -57,18 +49,14 @@ export class Transform {
         this.setHeight(height);
     }
 
-    getSize() {
-        return this.mScale;
-    }
+    getSize = () => this.mScale;
 
     incSizeBy(delta: number) {
         this.incWidthBy(delta);
         this.incHeightBy(delta);
     }
 
-    getWidth() {
-        return this.mScale[0];
-    }
+    getWidth = () => this.mScale[0];
 
     setWidth(width: number) {
         this.mScale[0] = width;
@@ -78,9 +66,7 @@ export class Transform {
         this.mScale[0] += delta;
     }
 
-    getHeight() {
-        return this.mScale[1];
-    }
+    getHeight = () => this.mScale[1];
 
     setHeight(height: number) {
         this.mScale[1] = height;
@@ -109,13 +95,9 @@ export class Transform {
         this.setRotationInRad(this.mRotationInRad + deltaRad);
     }
 
-    getRotationInRad() {
-        return this.mRotationInRad;
-    }
+    getRotationInRad = () => this.mRotationInRad;
 
-    getRotationInDegree() {
-        return this.mRotationInRad * 180.0 / Math.PI;
-    }
+    getRotationInDegree = () => this.mRotationInRad * 180.0 / Math.PI;
 
     // returns the matrix the concatenates the transformations defined
     getTRSMatrix() {
@@ -135,3 +117,5 @@ export class Transform {
         return matrix;
     }
 }
+
+export default Transform;

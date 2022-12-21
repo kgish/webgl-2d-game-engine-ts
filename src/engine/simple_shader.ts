@@ -14,12 +14,16 @@ export class SimpleShader {
     mVertexPositionRef: GLint; // reference to VertexPosition within the shader
     mVertexShader: WebGLShader | null;
     mFragmentShader: WebGLShader | null;
-    mPixelColorRef: WebGLUniformLocation | null;
-    mModelMatrixRef: WebGLUniformLocation | null;
+    mPixelColorRef: WebGLUniformLocation | null = null;     // reference to the pixelColor uniform in the fragment shader
+    mModelMatrixRef: WebGLUniformLocation | null = null; // reference to model transform matrix in vertex shader
+    mCameraMatrixRef: WebGLUniformLocation | null = null; // reference to the View/Projection matrix in the vertex shader
 
     constructor(vertexShaderSource: string, fragmentShaderSource: string) {
 
         const gl = glSys.get();
+        if (!gl) {
+            throw new Error("Cannot get GL!");
+        }
 
         // Step A: Load and compile vertex and fragment shaders
         this.mVertexShader = loadAndCompileShader(vertexShaderSource, gl.VERTEX_SHADER);
@@ -49,12 +53,16 @@ export class SimpleShader {
         // Step E: Gets uniform variable uPixelColor in fragment shader
         this.mPixelColorRef = gl.getUniformLocation(this.mCompiledShader, 'uPixelColor');
         this.mModelMatrixRef = gl.getUniformLocation(this.mCompiledShader, 'uModelXformMatrix');
+        this.mCameraMatrixRef = gl.getUniformLocation(this.mCompiledShader, "uCameraXformMatrix");
     }
 
 
     // Activate the shader for rendering
-    activate(pixelColor: number[], trsMatrix: mat4) {
+    activate(pixelColor: number[], trsMatrix: mat4, cameraMatrix: mat4) {
         const gl = glSys.get();
+        if (!gl) {
+            throw new Error("Cannot get GL!");
+        }
         gl.useProgram(this.mCompiledShader);
 
         // bind vertex buffer
@@ -70,6 +78,7 @@ export class SimpleShader {
         // load uniforms
         gl.uniform4fv(this.mPixelColorRef, pixelColor);
         gl.uniformMatrix4fv(this.mModelMatrixRef, false, trsMatrix);
+        gl.uniformMatrix4fv(this.mCameraMatrixRef, false, cameraMatrix);
     }
 }
 
@@ -82,6 +91,9 @@ export class SimpleShader {
 // The id is the id of the script in the html tag.
 function loadAndCompileShader(shaderSource: string, shaderType: GLenum) {
     const gl = glSys.get();
+    if (!gl) {
+        throw new Error("Cannot get GL!");
+    }
 
     // Step B: Create the shader based on the shader type: vertex or fragment
     const compiledShader = gl.createShader(shaderType);
@@ -106,12 +118,4 @@ function loadAndCompileShader(shaderSource: string, shaderType: GLenum) {
 
 //-- end of private methods
 
-
-//
-// export the class, the default keyword says importer of this class cannot change the name 'SimpleShader'
-// for this reason, to import this class, one must issue
-//      import SimpleShader from './simple_shader.js';
-// attempt to change name, e.g.,
-//      import SimpleShader as MyShaderName from './simple_shader.js';
-// will result in failure
-//
+export default SimpleShader;

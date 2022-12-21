@@ -1,53 +1,85 @@
 /*
  * File: main.ts
- *
  * This is the logic of our game. For now, this is very simple.
- *
  */
 
-// client program simple import from engine/index.js for all engine symbols
-import * as engine from '../engine/index';
-import { Renderable } from '../engine';
-import { mat4, vec3 } from 'gl-matrix';
+import { vec2 } from 'gl-matrix';
+
+import engine from '../engine';
+import Camera from '../engine/camera';
+import Renderable from '../engine/renderable';
 
 class MyGame {
-    mWhiteSq: Renderable;
+    mCamera: Camera;
+    mBlueSq: Renderable;
     mRedSq: Renderable;
+    mTLSq: Renderable;
+    mTRSq: Renderable;
+    mBRSq: Renderable;
+    mBLSq: Renderable;
 
     constructor(htmlCanvasID: string) {
         // Step A: Initialize the game engine
         engine.init(htmlCanvasID);
 
-        // Step B: Create the Renderable objects:
-        this.mWhiteSq = new engine.Renderable();
-        this.mWhiteSq.setColor([ 1, 1, 1, 1 ]);
+        // Step B: Setup the camera
+        this.mCamera = new engine.Camera(
+            vec2.fromValues(20, 60),       // center of the WC
+            20,                    // width of WC
+            [20, 40, 600, 300] // viewport (orgX, orgY, width, height)
+            );
+
+        // Step C: Create the Renderable objects:
+        this.mBlueSq = new engine.Renderable();
+        this.mBlueSq.setColor([0.25, 0.25, 0.95, 1]);
         this.mRedSq = new engine.Renderable();
-        this.mRedSq.setColor([ 1, 0, 0, 1 ]);
+        this.mRedSq.setColor([1, 0.25, 0.25, 1]);
+        this.mTLSq = new engine.Renderable();
+        this.mTLSq.setColor([0.9, 0.1, 0.1, 1]);
+        this.mTRSq = new engine.Renderable();
+        this.mTRSq.setColor([0.1, 0.9, 0.1, 1]);
+        this.mBRSq = new engine.Renderable();
+        this.mBRSq.setColor([0.1, 0.1, 0.9, 1]);
+        this.mBLSq = new engine.Renderable();
+        this.mBLSq.setColor([0.1, 0.1, 0.1, 1]);
 
-        // Step C: Draw!
-        engine.clearCanvas([ 0, 0.8, 0, 1 ]);  // Clear the canvas
+        // Step D: Clear the canvas
+        engine.clearCanvas([0.9, 0.9, 0.9, 1]);        // Clear the canvas
 
-        // Create a new identity transform operator
-        const trsMatrix = mat4.create();
+        // Step E: Starts the drawing by activating the camera
+        this.mCamera.setViewAndCameraMatrix();
 
-        // Step D: compute the white square transform
-        mat4.translate(trsMatrix, trsMatrix, vec3.fromValues(-0.25, 0.25, 0.0));
-        mat4.rotateZ(trsMatrix, trsMatrix, 0.2); // rotation is in radian
-        mat4.scale(trsMatrix, trsMatrix, vec3.fromValues(1.2, 1.2, 1.0));
-        // Step E: draw the white square with the computed transform
-        this.mWhiteSq.draw(trsMatrix);
+        // Step F: Draw the blue square
+        // Center Blue, slightly rotated square
+        this.mBlueSq.getXform().setPosition(20, 60);
+        this.mBlueSq.getXform().setRotationInRad(0.2); // In Radians
+        this.mBlueSq.getXform().setSize(5, 5);
+        this.mBlueSq.draw(this.mCamera);
 
-        // Step F: compute the red square transform
-        mat4.identity(trsMatrix); // restart
-        mat4.translate(trsMatrix, trsMatrix, vec3.fromValues(0.25, -0.25, 0.0));
-        mat4.rotateZ(trsMatrix, trsMatrix, -0.785); // rotation is in radian (about -45-degree)
-        mat4.scale(trsMatrix, trsMatrix, vec3.fromValues(0.4, 0.4, 1.0));
-        // Step G: draw the red square with the computed transform
-        this.mRedSq.draw(trsMatrix);
+        // Step G: Draw the center and the corner squares
+        // center red square
+        this.mRedSq.getXform().setPosition(20, 60);
+        this.mRedSq.getXform().setSize(2, 2);
+        this.mRedSq.draw(this.mCamera);
 
+        // top left
+        this.mTLSq.getXform().setPosition(10, 65);
+        this.mTLSq.draw(this.mCamera);
+
+        // top right
+        this.mTRSq.getXform().setPosition(30, 65);
+        this.mTRSq.draw(this.mCamera);
+
+        // bottom right
+        this.mBRSq.getXform().setPosition(30, 55);
+        this.mBRSq.draw(this.mCamera);
+
+        // bottom left
+        this.mBLSq.getXform().setPosition(10, 55);
+        this.mBLSq.draw(this.mCamera);
     }
 }
 
-window.onload = function () {
+window.onload = function() {
     new MyGame('GLCanvas');
 };

@@ -47,6 +47,7 @@ yarn test
 ## References
 
 * [Build Your Own 2D Game Engine and Create Great Web Games](https://link.springer.com/book/10.1007/978-1-4842-7377-7).
+* [Github Code sources](https://github.com/Apress/build-your-own-2d-game-engine-2e)
 * [WebGL2 Fundamentals](https://webgl2fundamentals.org)
 * [Parcel](https://parceljs.org)
 * [TypeScript](https://www.typescriptlang.org)

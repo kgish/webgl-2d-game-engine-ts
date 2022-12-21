@@ -6,12 +6,7 @@
     "esModuleInterop": true,
     "skipLibCheck": true,
     "forceConsistentCasingInFileNames": true,
-    "baseUrl": "./src",
-    "paths": {
-      "~*": [
-        "./*"
-      ]
-    },
+    "baseUrl": "./src"
   },
   "files": [
     "src/types/global.d.ts"

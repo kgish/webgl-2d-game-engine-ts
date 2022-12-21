@@ -11,7 +11,7 @@ import * as glSys from './gl';
 // Reference to the vertex positions for the square in the gl context
 let mGLVertexBuffer: WebGLBuffer | null;
 
-export function get() {
+function get() {
     return mGLVertexBuffer;
 }
 
@@ -23,9 +23,13 @@ const mVerticesOfSquare = [
     -0.5, -0.5, 0.0
 ];
 
-export function init() {
+function init() {
 
     const gl = glSys.get();
+
+    if (!gl) {
+        throw new Error("Cannot get GL!");
+    }
 
     // Step A: Create a buffer on the gl context for our vertex positions
     mGLVertexBuffer = gl.createBuffer();
@@ -36,3 +40,5 @@ export function init() {
     // Step C: Loads mVerticesOfSquare into the vertexBuffer
     gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(mVerticesOfSquare), gl.STATIC_DRAW);
 }
+
+export { init, get };
