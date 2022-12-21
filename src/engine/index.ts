@@ -36,7 +36,7 @@ function clearCanvas(color: number[]) {
 }
 
 
-export  default {
+export default {
     // Util classes
     Camera, Transform, Renderable,
 

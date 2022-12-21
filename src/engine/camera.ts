@@ -42,7 +42,7 @@ class Camera {
         this.mCameraMatrix = mat4.create();
 
         // background color
-        this.mBGColor = [0.8, 0.8, 0.8, 1]; // RGB and Alpha
+        this.mBGColor = [ 0.8, 0.8, 0.8, 1 ]; // RGB and Alpha
     }
 
     // #region Basic getter and setters
@@ -51,19 +51,31 @@ class Camera {
         this.mWCCenter[0] = xPos;
         this.mWCCenter[1] = yPos;
     }
+
     getWCCenter = () => this.mWCCenter;
-    setWCWidth(width: number) { this.mWCWidth = width; }
+
+    setWCWidth(width: number) {
+        this.mWCWidth = width;
+    }
+
     getWCWidth = () => this.mWCWidth;
+
     getWCHeight() {
         // viewportH/viewportW
         const ratio = this.mViewport[eViewport.eHeight] / this.mViewport[eViewport.eWidth];
         return this.getWCWidth() * ratio;
     }
 
-    setViewport(viewportArray: number[]) { this.mViewport = viewportArray; }
+    setViewport(viewportArray: number[]) {
+        this.mViewport = viewportArray;
+    }
+
     getViewport = () => this.mViewport;
 
-    setBackgroundColor(newColor: number[]) { this.mBGColor = newColor; }
+    setBackgroundColor(newColor: number[]) {
+        this.mBGColor = newColor;
+    }
+
     getBackgroundColor = () => this.mBGColor;
     // #endregion
 

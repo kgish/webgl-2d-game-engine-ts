@@ -1,17 +1,17 @@
 {
-  "compilerOptions": {
-    "target": "es5",
-    "module": "commonjs",
-    "strict": true,
-    "esModuleInterop": true,
-    "skipLibCheck": true,
-    "forceConsistentCasingInFileNames": true,
-    "baseUrl": "./src"
-  },
-  "files": [
-    "src/types/global.d.ts"
-  ],
-  "include": [
-    "src/**/*"
-  ]
+    "compilerOptions": {
+        "target": "es5",
+        "module": "commonjs",
+        "strict": true,
+        "esModuleInterop": true,
+        "skipLibCheck": true,
+        "forceConsistentCasingInFileNames": true,
+        "baseUrl": "./src"
+    },
+    "files": [
+        "src/types/global.d.ts"
+    ],
+    "include": [
+        "src/**/*"
+    ]
 }

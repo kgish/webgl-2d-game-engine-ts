@@ -25,4 +25,4 @@ function init(htmlCanvasID: string): void {
     }
 }
 
-export {init, get };
+export { init, get };

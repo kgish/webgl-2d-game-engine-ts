@@ -18,7 +18,7 @@ class Renderable {
 
     constructor() {
         this.mShader = shaderResources.getConstColorShader();
-        this.mColor = [1, 1, 1, 1];
+        this.mColor = [ 1, 1, 1, 1 ];
         this.mXform = new Transform();
     }
 
@@ -31,9 +31,14 @@ class Renderable {
         gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4);
     }
 
-    getXform() { return this.mXform; }
+    getXform() {
+        return this.mXform;
+    }
 
-    setColor(color: number[]) { this.mColor = color; }
+    setColor(color: number[]) {
+        this.mColor = color;
+    }
+
     getColor = () => this.mColor;
 }
 
