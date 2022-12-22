@@ -16,12 +16,14 @@ import Renderable from './renderable';
 import * as glSys from './core/gl';
 import * as vertexBuffer from './core/vertex_buffer';
 import * as shaderResources from './core/shader_resources';
+import * as input from './input';
 
 // general engine utilities
 function init(htmlCanvasID: string) {
     glSys.init(htmlCanvasID);
     vertexBuffer.init();
     shaderResources.init();
+    input.init();
 }
 
 function clearCanvas(color: number[]) {
@@ -37,6 +39,9 @@ function clearCanvas(color: number[]) {
 
 
 export default {
+    // input support
+    input,
+
     // Util classes
     Camera, Transform, Renderable,
 

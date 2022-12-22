@@ -76,21 +76,31 @@ class MyGame {
         // For this very simple game, let's move the white square and pulse the red
         const deltaX = 0.05;
 
-        // Step A: Rotate the white square
         const whiteXform = this.mWhiteSq?.getXform();
         if (whiteXform) {
-            if (whiteXform.getXPos() > 30) // this is the right-bound of the window
-                whiteXform.setPosition(10, 60);
-            whiteXform.incXPosBy(deltaX);
-            whiteXform.incRotationByDegree(1);
+            // Step A: test for white square movement
+            if (engine.input.isKeyPressed(engine.input.keys.Right)) {
+                if (whiteXform.getXPos() > 30) { // this is the right-bound of the window
+                    whiteXform.setPosition(10, 60);
+                }
+                whiteXform.incXPosBy(deltaX);
+            }
+
+            // Step  B: test for white square rotation
+            if (engine.input.isKeyClicked(engine.input.keys.Up)) {
+                whiteXform.incRotationByDegree(1);
+            }
         }
 
-        // Step B: pulse the red square
         const redXform = this.mRedSq?.getXform();
         if (redXform) {
-            if (redXform.getWidth() > 5)
-                redXform.setSize(2, 2);
-            redXform.incSizeBy(0.05);
+            // Step  C: test for pulsing the red square
+            if (engine.input.isKeyPressed(engine.input.keys.Down)) {
+                if (redXform.getWidth() > 5) {
+                    redXform.setSize(2, 2);
+                }
+                redXform.incSizeBy(0.05);
+            }
         }
     }
 }

@@ -23,6 +23,8 @@ let mLoopRunning = false;
 let mCurrentScene: IScene | null = null;
 let mFrameID = -1;
 
+import * as input from '../input';
+
 // This function loops over draw/update once
 function loopOnce() {
     if (mLoopRunning) {
@@ -44,6 +46,7 @@ function loopOnce() {
         //      Update only every kMPF (1/60 of a second)
         //      If lag larger then update frames, update until caught up.
         while ((mLagTime >= kMPF) && mLoopRunning) {
+            input.update();
             mCurrentScene?.update();
             mLagTime -= kMPF;
         }
