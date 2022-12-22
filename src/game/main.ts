@@ -3,83 +3,103 @@
  * This is the logic of our game. For now, this is very simple.
  */
 
-import { vec2 } from 'gl-matrix';
+// Accessing engine internal is not ideal,
+// this must be resolved! (later)
+import * as loop from '../engine/core/loop';
 
-import engine from '../engine';
+// Engine stuff
+import engine from '../engine/index';
 import Camera from '../engine/camera';
+import { vec2 } from 'gl-matrix';
 import Renderable from '../engine/renderable';
 
 class MyGame {
-    mCamera: Camera;
-    mBlueSq: Renderable;
-    mRedSq: Renderable;
-    mTLSq: Renderable;
-    mTRSq: Renderable;
-    mBRSq: Renderable;
-    mBLSq: Renderable;
+    // variables for the squares
+    mWhiteSq: Renderable | null = null;        // these are the Renderable objects
+    mRedSq: Renderable | null = null;
 
-    constructor(htmlCanvasID: string) {
-        // Step A: Initialize the game engine
-        engine.init(htmlCanvasID);
+    // The camera to view the scene
+    mCamera: Camera | null = null;
 
-        // Step B: Setup the camera
+    // eslint-disable-next-line @typescript-eslint/no-empty-function
+    constructor() {
+    }
+
+    init() {
+        // Step A: set up the cameras
         this.mCamera = new engine.Camera(
-            vec2.fromValues(20, 60),       // center of the WC
-            20,                    // width of WC
-            [ 20, 40, 600, 300 ] // viewport (orgX, orgY, width, height)
+            vec2.fromValues(20, 60),   // position of the camera
+            20,                        // width of camera
+            [ 20, 40, 600, 300 ]         // viewport (orgX, orgY, width, height)
         );
+        this.mCamera.setBackgroundColor([ 0.8, 0.8, 0.8, 1 ]);
+        // sets the background to gray
 
-        // Step C: Create the Renderable objects:
-        this.mBlueSq = new engine.Renderable();
-        this.mBlueSq.setColor([ 0.25, 0.25, 0.95, 1 ]);
+        // Step  B: Create the Renderable objects:
+        this.mWhiteSq = new engine.Renderable();
+        this.mWhiteSq.setColor([ 1, 1, 1, 1 ]);
         this.mRedSq = new engine.Renderable();
-        this.mRedSq.setColor([ 1, 0.25, 0.25, 1 ]);
-        this.mTLSq = new engine.Renderable();
-        this.mTLSq.setColor([ 0.9, 0.1, 0.1, 1 ]);
-        this.mTRSq = new engine.Renderable();
-        this.mTRSq.setColor([ 0.1, 0.9, 0.1, 1 ]);
-        this.mBRSq = new engine.Renderable();
-        this.mBRSq.setColor([ 0.1, 0.1, 0.9, 1 ]);
-        this.mBLSq = new engine.Renderable();
-        this.mBLSq.setColor([ 0.1, 0.1, 0.1, 1 ]);
+        this.mRedSq.setColor([ 1, 0, 0, 1 ]);
 
-        // Step D: Clear the canvas
-        engine.clearCanvas([ 0.9, 0.9, 0.9, 1 ]);        // Clear the canvas
+        // Step  C: Initialize the white Renderable object: centered, 5x5, rotated
+        this.mWhiteSq.getXform().setPosition(20, 60);
+        this.mWhiteSq.getXform().setRotationInRad(0.2); // In Radians
+        this.mWhiteSq.getXform().setSize(5, 5);
 
-        // Step E: Starts the drawing by activating the camera
-        this.mCamera.setViewAndCameraMatrix();
-
-        // Step F: Draw the blue square
-        // Center Blue, slightly rotated square
-        this.mBlueSq.getXform().setPosition(20, 60);
-        this.mBlueSq.getXform().setRotationInRad(0.2); // In Radians
-        this.mBlueSq.getXform().setSize(5, 5);
-        this.mBlueSq.draw(this.mCamera);
-
-        // Step G: Draw the center and the corner squares
-        // center red square
+        // Step  D: Initialize the red Renderable object: centered 2x2
         this.mRedSq.getXform().setPosition(20, 60);
         this.mRedSq.getXform().setSize(2, 2);
-        this.mRedSq.draw(this.mCamera);
+    }
 
-        // top left
-        this.mTLSq.getXform().setPosition(10, 65);
-        this.mTLSq.draw(this.mCamera);
 
-        // top right
-        this.mTRSq.getXform().setPosition(30, 65);
-        this.mTRSq.draw(this.mCamera);
+    // This is the draw function, make sure to setup proper drawing environment, and more
+    // importantly, make sure to _NOT_ change any state.
+    draw() {
+        // Step A: clear the canvas
+        engine.clearCanvas([ 0.9, 0.9, 0.9, 1.0 ]); // clear to light gray
 
-        // bottom right
-        this.mBRSq.getXform().setPosition(30, 55);
-        this.mBRSq.draw(this.mCamera);
+        if (this.mCamera) {
+            // Step  B: Activate the drawing Camera
+            this.mCamera.setViewAndCameraMatrix();
 
-        // bottom left
-        this.mBLSq.getXform().setPosition(10, 55);
-        this.mBLSq.draw(this.mCamera);
+            // Step  C: Activate the white shader to draw
+            this.mWhiteSq?.draw(this.mCamera);
+
+            // Step  D: Activate the red shader to draw
+            this.mRedSq?.draw(this.mCamera);
+        }
+    }
+
+    // The update function, updates the application state. Make sure to _NOT_ draw
+    // anything from this function!
+    update() {
+        // For this very simple game, let's move the white square and pulse the red
+        const deltaX = 0.05;
+
+        // Step A: Rotate the white square
+        const whiteXform = this.mWhiteSq?.getXform();
+        if (whiteXform) {
+            if (whiteXform.getXPos() > 30) // this is the right-bound of the window
+                whiteXform.setPosition(10, 60);
+            whiteXform.incXPosBy(deltaX);
+            whiteXform.incRotationByDegree(1);
+        }
+
+        // Step B: pulse the red square
+        const redXform = this.mRedSq?.getXform();
+        if (redXform) {
+            if (redXform.getWidth() > 5)
+                redXform.setSize(2, 2);
+            redXform.incSizeBy(0.05);
+        }
     }
 }
 
 window.onload = function () {
-    new MyGame('GLCanvas');
+    engine.init("GLCanvas");
+
+    const myGame = new MyGame();
+
+    // new begins the game
+    loop.start(myGame);
 };
