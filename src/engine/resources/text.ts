@@ -11,7 +11,7 @@ const unload = map.unload;
 const has = map.has;
 const get = map.get;
 
-const decodeText = (data: { text: () => string; }) => data.text();
+const decodeText = (data: Response) => data.text();
 
 const parseText = (text: string) => text;
 

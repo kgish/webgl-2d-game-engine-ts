@@ -32,7 +32,7 @@ class MapEntry {
 }
 
 const mMap = new Map<string, MapEntry>();
-let mOutstandingPromises: Array<Promise<string>> = [];
+let mOutstandingPromises: Array<Promise<void>> = [];
 
 function has(path: string) {
     return mMap.has(path);
@@ -70,8 +70,8 @@ function get(path: string) {
 //   Step 3: parseResource on the decodedResource
 //   Step 4: store result into the map
 // Push the promised operation into an array
-function loadDecodeParse(path: string, decodeResource: { (data: { text: () => string }): string; (arg0: Response): string; }, parseResource: { (text: string): string; (arg0: string): string; }) {
-    let fetchPromise: Promise<string> | null = null;
+function loadDecodeParse(path: string, decodeResource: (data: Response) => Promise<string>, parseResource: (text: string) => string) {
+    let fetchPromise: Promise<void> | null = null;
     if (!has(path)) {
         loadRequested(path);
         fetchPromise = fetch(path)
@@ -79,7 +79,6 @@ function loadDecodeParse(path: string, decodeResource: { (data: { text: () => st
             .then(data => parseResource(data))
             .then(data => {
                 set(path, data);
-                return data;
             })
             .catch(err => {
                 throw err;
@@ -105,7 +104,7 @@ function unload(path: string) {
     }
 }
 
-function pushPromise(promise: Promise<string>) {
+function pushPromise(promise: Promise<void>) {
     mOutstandingPromises.push(promise);
 }
 

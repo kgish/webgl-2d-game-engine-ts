@@ -12,6 +12,7 @@ import * as map from './resource_map';
 // Simple Shader
 const kSimpleVS = 'glsl_shaders/simple_vs.glsl';  // Path to the VertexShader
 const kSimpleFS = 'glsl_shaders/simple_fs.glsl';  // Path to the simple FragmentShader
+
 let mConstColorShader: SimpleShader | null = null;
 
 function createShaders() {
@@ -19,8 +20,9 @@ function createShaders() {
 }
 
 function init() {
-    const loadPromise = new Promise<string>(
-        async function (resolve) {
+    const loadPromise = new Promise<void>(
+        // eslint-disable-next-line no-async-promise-executor
+        async (resolve) => {
             await Promise.all([
                 text.load(kSimpleFS),
                 text.load(kSimpleVS)
