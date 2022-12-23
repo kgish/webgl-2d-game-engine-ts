@@ -5,9 +5,11 @@
  *
  */
 
+import { mat4 } from 'gl-matrix';
+
 import * as glSys from './core/gl';
 import * as vertexBuffer from './core/vertex_buffer';
-import { mat4 } from 'gl-matrix';
+import * as text from './resources/text';
 
 export class SimpleShader {
     mCompiledShader: WebGLProgram | null;  // reference to the compiled shader in webgl context
@@ -18,16 +20,16 @@ export class SimpleShader {
     mModelMatrixRef: WebGLUniformLocation | null = null; // reference to model transform matrix in vertex shader
     mCameraMatrixRef: WebGLUniformLocation | null = null; // reference to the View/Projection matrix in the vertex shader
 
-    constructor(vertexShaderSource: string, fragmentShaderSource: string) {
+    constructor(vertexShaderPath: string, fragmentShaderPath: string) {
 
         const gl = glSys.get();
         if (!gl) {
-            throw new Error("Cannot get GL!");
+            throw new Error('Cannot get GL!');
         }
 
         // Step A: Load and compile vertex and fragment shaders
-        this.mVertexShader = loadAndCompileShader(vertexShaderSource, gl.VERTEX_SHADER);
-        this.mFragmentShader = loadAndCompileShader(fragmentShaderSource, gl.FRAGMENT_SHADER);
+        this.mVertexShader = compileShader(vertexShaderPath, gl.VERTEX_SHADER);
+        this.mFragmentShader = compileShader(fragmentShaderPath, gl.FRAGMENT_SHADER);
 
         // Step B: Create and link the shaders into a program.
         this.mCompiledShader = gl.createProgram();
@@ -41,7 +43,7 @@ export class SimpleShader {
 
         // Step C: Check for error
         if (!gl.getProgramParameter(this.mCompiledShader, gl.LINK_STATUS)) {
-            throw new Error('Shader linking failed with [' + vertexShaderSource + ' ' + fragmentShaderSource + '].');
+            throw new Error('Shader linking failed with [' + vertexShaderPath + ' ' + fragmentShaderPath + ']!');
         }
 
         // Step D: Gets a reference to the aVertexPosition attribute within the shaders.
@@ -53,7 +55,7 @@ export class SimpleShader {
         // Step E: Gets uniform variable uPixelColor in fragment shader
         this.mPixelColorRef = gl.getUniformLocation(this.mCompiledShader, 'uPixelColor');
         this.mModelMatrixRef = gl.getUniformLocation(this.mCompiledShader, 'uModelXformMatrix');
-        this.mCameraMatrixRef = gl.getUniformLocation(this.mCompiledShader, "uCameraXformMatrix");
+        this.mCameraMatrixRef = gl.getUniformLocation(this.mCompiledShader, 'uCameraXformMatrix');
     }
 
 
@@ -61,7 +63,7 @@ export class SimpleShader {
     activate(pixelColor: number[], trsMatrix: mat4, cameraMatrix: mat4) {
         const gl = glSys.get();
         if (!gl) {
-            throw new Error("Cannot get GL!");
+            throw new Error('Cannot get GL!');
         }
         gl.useProgram(this.mCompiledShader);
 
@@ -82,6 +84,7 @@ export class SimpleShader {
     }
 }
 
+
 //**-----------------------------------
 // Private methods not visible outside of this file
 // **------------------------------------
@@ -89,17 +92,26 @@ export class SimpleShader {
 //
 // Returns a compiled shader from a shader in the dom.
 // The id is the id of the script in the html tag.
-function loadAndCompileShader(shaderSource: string, shaderType: GLenum) {
+function compileShader(filePath: string, shaderType: number) {
+    let shaderSource: string | null = null;
+    let compiledShader: WebGLShader | null = null;
+
     const gl = glSys.get();
     if (!gl) {
-        throw new Error("Cannot get GL!");
+        throw new Error('Cannot get GL!');
+    }
+
+    // Step A: Access the shader text file
+    shaderSource = text.get(filePath) || null;
+
+    if (!shaderSource) {
+        throw new Error('WARNING:' + filePath + ' not loaded!');
     }
 
     // Step B: Create the shader based on the shader type: vertex or fragment
-    const compiledShader = gl.createShader(shaderType);
-
+    compiledShader = gl.createShader(shaderType);
     if (!compiledShader) {
-        throw new Error('Cannot create shader!');
+        throw new Error('Cannot get compiled shader!');
     }
 
     // Step C: Compile the created shader
@@ -110,12 +122,11 @@ function loadAndCompileShader(shaderSource: string, shaderType: GLenum) {
     // The log info is how shader compilation errors are typically displayed.
     // This is useful for debugging the shaders.
     if (!gl.getShaderParameter(compiledShader, gl.COMPILE_STATUS)) {
-        throw new Error('A shader compiling error occurred: ' + gl.getShaderInfoLog(compiledShader));
+        throw new Error('Shader ['+ filePath +'] compiling error: ' + gl.getShaderInfoLog(compiledShader + '!'));
     }
 
     return compiledShader;
 }
-
 //-- end of private methods
 
 export default SimpleShader;

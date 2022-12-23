@@ -29,14 +29,12 @@ function init(htmlCanvasID: string) {
 function clearCanvas(color: number[]) {
     const gl = glSys.get();
     if (!gl) {
-        throw new Error("Cannot get GL!");
+        throw new Error('Cannot get GL!');
     }
-
 
     gl.clearColor(color[0], color[1], color[2], color[3]);  // set the color to be cleared
     gl.clear(gl.COLOR_BUFFER_BIT);      // clear to the color previously set
 }
-
 
 export default {
     // input support

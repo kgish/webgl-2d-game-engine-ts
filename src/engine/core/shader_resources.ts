@@ -1,22 +1,39 @@
 /*
  * File: shader_resources.ts
  *
- * Defines drawing system shaders.
+ * Defines drawing system shaders
  *
  */
 
-// Simple Shader
 import SimpleShader from '../simple_shader';
+import * as text from '../resources/text';
+import * as map from './resource_map';
 
-import { kSimpleVS } from '../../glsl_shaders/simple_vs_glsl'; // Path to the VertexShader
-import { kSimpleFS } from '../../glsl_shaders/simple_fs_glsl'; // Path to the simple FragmentShader
+// Simple Shader
+const kSimpleVS = 'glsl_shaders/simple_vs.glsl';  // Path to the VertexShader
+const kSimpleFS = 'glsl_shaders/simple_fs.glsl';  // Path to the simple FragmentShader
+let mConstColorShader: SimpleShader | null = null;
 
-let mConstColorShader: SimpleShader;
+function createShaders() {
+    mConstColorShader = new SimpleShader(kSimpleVS, kSimpleFS);
+}
 
-const init = () => createShaders();
+function init() {
+    const loadPromise = new Promise<string>(
+        async function (resolve) {
+            await Promise.all([
+                text.load(kSimpleFS),
+                text.load(kSimpleVS)
+            ]);
+            resolve();
+        }).then(
+        function resolve() {
+            createShaders();
+        }
+    );
+    map.pushPromise(loadPromise);
+}
 
 const getConstColorShader = () => mConstColorShader;
-
-const createShaders = () => mConstColorShader = new SimpleShader(kSimpleVS, kSimpleFS);
 
 export { init, getConstColorShader };

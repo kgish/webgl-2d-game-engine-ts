@@ -23,6 +23,7 @@ let mLoopRunning = false;
 let mCurrentScene: IScene | null = null;
 let mFrameID = -1;
 
+import * as map from './resource_map';
 import * as input from '../input';
 
 // This function loops over draw/update once
@@ -53,10 +54,13 @@ function loopOnce() {
     }
 }
 
-function start(scene: IScene) {
+async function start(scene: IScene) {
     if (mLoopRunning) {
-        throw new Error("loop already running");
+        throw new Error('loop already running!');
     }
+
+    // Wait for any async requests before game-load
+    await map.waitOnPromises();
 
     mCurrentScene = scene;
     mCurrentScene.init();

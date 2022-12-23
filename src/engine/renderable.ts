@@ -12,7 +12,7 @@ import SimpleShader from '../engine/simple_shader';
 import Camera from '../engine/camera';
 
 class Renderable {
-    mShader: SimpleShader;   // the shader for shading this object
+    mShader: SimpleShader | null;   // the shader for shading this object
     mColor: number[];     // color of pixel
     mXform: Transform;  // the transform object
 
@@ -25,9 +25,11 @@ class Renderable {
     draw(camera: Camera) {
         const gl = glSys.get();
         if (!gl) {
-            throw new Error("Cannot get GL!");
+            throw new Error('Cannot get GL!');
         }
-        this.mShader.activate(this.mColor, this.mXform.getTRSMatrix(), camera.getCameraMatrix());
+        if (this.mShader) {
+            this.mShader.activate(this.mColor, this.mXform.getTRSMatrix(), camera.getCameraMatrix());
+        }
         gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4);
     }
 

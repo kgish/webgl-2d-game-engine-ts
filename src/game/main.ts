@@ -106,7 +106,7 @@ class MyGame {
 }
 
 window.onload = function () {
-    engine.init("GLCanvas");
+    engine.init('GLCanvas');
 
     const myGame = new MyGame();
 

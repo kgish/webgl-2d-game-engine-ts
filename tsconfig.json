@@ -6,7 +6,14 @@
         "esModuleInterop": true,
         "skipLibCheck": true,
         "forceConsistentCasingInFileNames": true,
-        "baseUrl": "./src"
+        "baseUrl": "./src",
+        "lib": [
+            "dom",
+            "es5",
+            "scripthost",
+            "es2015.promise",
+            "es2015.collection"
+        ]
     },
     "files": [
         "src/types/global.d.ts"

@@ -28,7 +28,7 @@ function init() {
     const gl = glSys.get();
 
     if (!gl) {
-        throw new Error("Cannot get GL!");
+        throw new Error('Cannot get GL!');
     }
 
     // Step A: Create a buffer on the gl context for our vertex positions

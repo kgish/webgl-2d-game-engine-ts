@@ -85,7 +85,7 @@ class Camera {
     setViewAndCameraMatrix() {
         const gl = glSys.get();
         if (!gl) {
-            throw new Error("Cannot get GL!");
+            throw new Error('Cannot get GL!');
         }
 
         // Step A1: Set up the viewport: area on canvas to be drawn
