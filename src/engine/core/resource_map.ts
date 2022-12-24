@@ -6,7 +6,7 @@
  */
 
 class MapEntry {
-    mData: string | null;
+    mData: string | Document | null;
     mRefCount: number;
 
     constructor(data: string | null) {
@@ -22,7 +22,7 @@ class MapEntry {
         this.mRefCount++;
     }
 
-    set(data: string) {
+    set(data: string | Document) {
         this.mData = data;
     }
 
@@ -38,7 +38,7 @@ function has(path: string) {
     return mMap.has(path);
 }
 
-function set(key: string, value: string) {
+function set(key: string, value: string | Document) {
     const entry = mMap.get(key);
     if (entry) {
         entry.set(value);
@@ -70,7 +70,7 @@ function get(path: string) {
 //   Step 3: parseResource on the decodedResource
 //   Step 4: store result into the map
 // Push the promised operation into an array
-function loadDecodeParse(path: string, decodeResource: (data: Response) => Promise<string>, parseResource: (text: string) => string) {
+function loadDecodeParse(path: string, decodeResource: (data: Response) => Promise<string>, parseResource: (text: string) => string | Document) {
     let fetchPromise: Promise<void> | null = null;
     if (!has(path)) {
         loadRequested(path);

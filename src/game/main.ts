@@ -33,7 +33,13 @@ class MyGame {
     }
 
     init() {
-        const sceneParser = new SceneFileParser(engine.xml.get(this.mSceneFile));
+        const xml = engine.xml.get(this.mSceneFile);
+
+        if (!xml) {
+            throw new Error('Cannot get xml!');
+        }
+
+        const sceneParser = new SceneFileParser(xml as Document);
 
         // Step A: Read in the camera
         this.mCamera = sceneParser.parseCamera();
@@ -49,14 +55,12 @@ class MyGame {
         engine.clearCanvas([ 0.9, 0.9, 0.9, 1.0 ]); // clear to light gray
 
         if (this.mCamera) {
-            // Step  B: Activate the drawing Camera
             this.mCamera.setViewAndCameraMatrix();
 
-            // Step  C: Activate the white shader to draw
-            this.mWhiteSq?.draw(this.mCamera);
-
-            // Step  D: Activate the red shader to draw
-            this.mRedSq?.draw(this.mCamera);
+            // Step  B: draw all the squares
+            for (let i = 0; i < this.mSqSet.length; i++) {
+                this.mSqSet[i].draw(this.mCamera);
+            }
         }
     }
 
@@ -64,33 +68,30 @@ class MyGame {
     // anything from this function!
     update() {
         // For this very simple game, let's move the white square and pulse the red
+
+        let xform = this.mSqSet[0].getXform();
         const deltaX = 0.05;
 
-        const whiteXform = this.mWhiteSq?.getXform();
-        if (whiteXform) {
-            // Step A: test for white square movement
-            if (engine.input.isKeyPressed(engine.input.keys.Right)) {
-                if (whiteXform.getXPos() > 30) { // this is the right-bound of the window
-                    whiteXform.setPosition(10, 60);
-                }
-                whiteXform.incXPosBy(deltaX);
+        // Step A: test for white square movement
+        if (engine.input.isKeyPressed(engine.input.keys.Right)) {
+            if (xform.getXPos() > 30) { // this is the right-bound of the window
+                xform.setPosition(10, 60);
             }
-
-            // Step  B: test for white square rotation
-            if (engine.input.isKeyClicked(engine.input.keys.Up)) {
-                whiteXform.incRotationByDegree(1);
-            }
+            xform.incXPosBy(deltaX);
         }
 
-        const redXform = this.mRedSq?.getXform();
-        if (redXform) {
-            // Step  C: test for pulsing the red square
-            if (engine.input.isKeyPressed(engine.input.keys.Down)) {
-                if (redXform.getWidth() > 5) {
-                    redXform.setSize(2, 2);
-                }
-                redXform.incSizeBy(0.05);
+        // Step B: test for white square rotation
+        if (engine.input.isKeyClicked(engine.input.keys.Up)) {
+            xform.incRotationByDegree(1);
+        }
+
+        xform = this.mSqSet[1].getXform();
+        // Step C: test for pulsing the red square
+        if (engine.input.isKeyPressed(engine.input.keys.Down)) {
+            if (xform.getWidth() > 5) {
+                xform.setSize(2, 2);
             }
+            xform.incSizeBy(0.05);
         }
     }
 
@@ -99,7 +100,7 @@ class MyGame {
     }
 
     unload() {
-        // unload the scene flie and loaded resources
+        // unload the scene file and loaded resources
         engine.xml.unload(this.mSceneFile);
     }
 }
