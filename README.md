@@ -44,7 +44,7 @@ yarn test
 
 ## Static files (assets)
 
-In order to get the static files loaded correctly, e.g. the GLSL shaders, I needed to install the parcel2 plugin [parcel-reporter-static-files-copy](https://github.com/elwin013/parcel-reporter-static-files-copy).
+In order to get the static files loaded correctly, e.g. the GLSL shaders, I needed to install the parcel2 plugin [parcel-reporter-multiple-static-file-copier](https://www.npmjs.com/package/parcel-reporter-multiple-static-file-copier).
 
 ```
 yarn add parcel-reporter-static-files-copy --dev
@@ -59,6 +59,28 @@ Then I created a new `public` directory in the project root, moved all of the as
 }
 ```
 
+Finally, I added the following lines to the `package.json` file:
+
+```
+{
+  ...
+  "staticFiles": {
+    "staticPath": "public",
+    "watcherGlob": "**"
+  },
+  "multipleStaticFileCopier": [
+    {
+      "origin": "public",
+      "destination": "dist/"
+    },
+    {
+      "origin": "src/glsl_shaders",
+      "destination": "public/glsl_shaders"
+    }
+  ],
+  ...    
+```
+
 ## References
 
 * [Build Your Own 2D Game Engine and Create Great Web Games](https://link.springer.com/book/10.1007/978-1-4842-7377-7).
@@ -68,4 +90,4 @@ Then I created a new `public` directory in the project root, moved all of the as
 * [TypeScript](https://www.typescriptlang.org)
 * [EsLint](https://eslint.org)
 * [Stylelint](https://stylelint.io)
-* [parcel-reporter-static-files-copy](https://github.com/elwin013/parcel-reporter-static-files-copy)
+* [parcel-reporter-multiple-static-file-copier](https://www.npmjs.com/package/parcel-reporter-multiple-static-file-copier)
