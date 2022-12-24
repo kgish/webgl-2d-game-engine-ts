@@ -61,7 +61,7 @@ function get(path: string) {
     if (!has(path)) {
         throw new Error('Error [' + path + ']: not loaded!');
     }
-    return mMap.get(path)?.data();
+    return mMap.get(path)?.data() || null;
 }
 
 // generic loading function,

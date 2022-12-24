@@ -1,5 +1,6 @@
 /*
  * File: main.ts
+ *
  * This is the logic of our game. For now, this is very simple.
  */
 
@@ -10,13 +11,19 @@ import * as loop from '../engine/core/loop';
 // Engine stuff
 import engine from '../engine/index';
 import Camera from '../engine/camera';
-import { vec2 } from 'gl-matrix';
 import Renderable from '../engine/renderable';
+import SceneFileParser from './util/scene_file_parser';
 
 class MyGame {
     // variables for the squares
     mWhiteSq: Renderable | null = null;        // these are the Renderable objects
     mRedSq: Renderable | null = null;
+
+    // scene file name
+    mSceneFile = 'assets/scene.xml';
+
+    // all squares
+    mSqSet: Renderable[] = [];        // these are the Renderable objects
 
     // The camera to view the scene
     mCamera: Camera | null = null;
@@ -26,31 +33,14 @@ class MyGame {
     }
 
     init() {
-        // Step A: set up the cameras
-        this.mCamera = new engine.Camera(
-            vec2.fromValues(20, 60),   // position of the camera
-            20,                        // width of camera
-            [ 20, 40, 600, 300 ]         // viewport (orgX, orgY, width, height)
-        );
-        this.mCamera.setBackgroundColor([ 0.8, 0.8, 0.8, 1 ]);
-        // sets the background to gray
+        const sceneParser = new SceneFileParser(engine.xml.get(this.mSceneFile));
 
-        // Step  B: Create the Renderable objects:
-        this.mWhiteSq = new engine.Renderable();
-        this.mWhiteSq.setColor([ 1, 1, 1, 1 ]);
-        this.mRedSq = new engine.Renderable();
-        this.mRedSq.setColor([ 1, 0, 0, 1 ]);
+        // Step A: Read in the camera
+        this.mCamera = sceneParser.parseCamera();
 
-        // Step  C: Initialize the white Renderable object: centered, 5x5, rotated
-        this.mWhiteSq.getXform().setPosition(20, 60);
-        this.mWhiteSq.getXform().setRotationInRad(0.2); // In Radians
-        this.mWhiteSq.getXform().setSize(5, 5);
-
-        // Step  D: Initialize the red Renderable object: centered 2x2
-        this.mRedSq.getXform().setPosition(20, 60);
-        this.mRedSq.getXform().setSize(2, 2);
+        // Step B: Read all the squares
+        sceneParser.parseSquares(this.mSqSet);
     }
-
 
     // This is the draw function, make sure to setup proper drawing environment, and more
     // importantly, make sure to _NOT_ change any state.
@@ -102,6 +92,15 @@ class MyGame {
                 redXform.incSizeBy(0.05);
             }
         }
+    }
+
+    load() {
+        engine.xml.load(this.mSceneFile);
+    }
+
+    unload() {
+        // unload the scene flie and loaded resources
+        engine.xml.unload(this.mSceneFile);
     }
 }
 

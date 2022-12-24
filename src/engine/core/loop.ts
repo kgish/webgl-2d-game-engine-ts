@@ -6,6 +6,7 @@
  */
 
 interface IScene {
+    load: () => void;
     draw: () => void;
     update: () => void;
     init: () => void;
@@ -59,10 +60,12 @@ async function start(scene: IScene) {
         throw new Error('loop already running!');
     }
 
+    mCurrentScene = scene;
+    mCurrentScene.load();
+
     // Wait for any async requests before game-load
     await map.waitOnPromises();
 
-    mCurrentScene = scene;
     mCurrentScene.init();
 
     mPrevTime = performance.now();

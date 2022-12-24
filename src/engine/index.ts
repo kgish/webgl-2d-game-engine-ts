@@ -1,24 +1,28 @@
 /*
  * File: index.ts
  *
- * serves as central export of the entire engine
+ * Serves as central export of the entire engine
  * client programs can simply import this file
  * for all symbols defined in the engine
  *
  */
 
-// general utilities
+// Resources
+import * as xml from './resources/xml';
+import * as text from './resources/text';
+
+// General utilities
 import Camera from './camera';
 import Transform from './transform';
 import Renderable from './renderable';
 
-// local to this file only
+// Local to this file only
 import * as glSys from './core/gl';
 import * as vertexBuffer from './core/vertex_buffer';
 import * as shaderResources from './core/shader_resources';
 import * as input from './input';
 
-// general engine utilities
+// General engine utilities
 function init(htmlCanvasID: string) {
     glSys.init(htmlCanvasID);
     vertexBuffer.init();
@@ -37,6 +41,9 @@ function clearCanvas(color: number[]) {
 }
 
 export default {
+    // resource support
+    text, xml,
+
     // input support
     input,
 
