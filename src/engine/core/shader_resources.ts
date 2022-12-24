@@ -36,6 +36,10 @@ function init() {
     map.pushPromise(loadPromise);
 }
 
+// eslint-disable-next-line @typescript-eslint/no-empty-function
+function cleanUp() {
+}
+
 const getConstColorShader = () => mConstColorShader;
 
-export { init, getConstColorShader };
+export { init, cleanUp, getConstColorShader };

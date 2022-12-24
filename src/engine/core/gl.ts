@@ -10,6 +10,20 @@ let mGL: WebGL2RenderingContext | null = null;
 
 const get = (): WebGL2RenderingContext | null => mGL;
 
+function cleanUp() {
+    if ((mGL == null) || (mCanvas == null))
+        throw new Error('Engine cleanup: system is not initialized!');
+
+    mGL = null;
+
+    // let the user know
+    mCanvas.style.position = "fixed";
+    mCanvas.style.backgroundColor = "rgba(200, 200, 200, 0.5)";
+    mCanvas = null;
+
+    document.body.innerHTML += "<br><br><h1>End of Game</h1><h1>GL System Shut Down</h1>";
+}
+
 function init(htmlCanvasID: string): void {
     mCanvas = document.getElementById(htmlCanvasID) as HTMLCanvasElement;
     if (mCanvas == null) {
@@ -25,4 +39,4 @@ function init(htmlCanvasID: string): void {
     }
 }
 
-export { init, get };
+export { init, get, cleanUp };

@@ -80,4 +80,8 @@ function stop() {
     cancelAnimationFrame(mFrameID);
 }
 
-export { start, stop };
+// eslint-disable-next-line @typescript-eslint/no-empty-function
+function cleanUp() {
+}
+
+export { start, stop, cleanUp };

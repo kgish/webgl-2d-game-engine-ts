@@ -39,7 +39,7 @@ class MyGame {
             throw new Error('Cannot get xml!');
         }
 
-        const sceneParser = new SceneFileParser(xml as Document);
+        const sceneParser = new SceneFileParser(xml as XMLDocument);
 
         // Step A: Read in the camera
         this.mCamera = sceneParser.parseCamera();

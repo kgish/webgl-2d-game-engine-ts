@@ -64,6 +64,10 @@ function onKeyUp(event: KeyboardEvent) {
     mIsKeyPressed[event.keyCode] = false;
 }
 
+// eslint-disable-next-line @typescript-eslint/no-empty-function
+function cleanUp() {
+}
+
 function init() {
     let i;
     for (i = 0; i < keys.LastKeyCode; i++) {
@@ -95,7 +99,7 @@ function isKeyClicked(keyCode: number) {
 }
 
 export {
-    keys, init,
+    keys, init, cleanUp,
     update,
     isKeyClicked,
     isKeyPressed

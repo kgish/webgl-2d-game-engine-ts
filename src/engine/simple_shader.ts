@@ -82,6 +82,21 @@ export class SimpleShader {
         gl.uniformMatrix4fv(this.mModelMatrixRef, false, trsMatrix);
         gl.uniformMatrix4fv(this.mCameraMatrixRef, false, cameraMatrix);
     }
+
+    cleanUp() {
+        const gl = glSys.get();
+        if (!gl) {
+            throw new Error('Cannot get GL!');
+        }
+
+        if (this.mCompiledShader && this.mVertexShader && this.mFragmentShader) {
+            gl.detachShader(this.mCompiledShader, this.mVertexShader);
+            gl.detachShader(this.mCompiledShader, this.mFragmentShader);
+            gl.deleteShader(this.mVertexShader);
+            gl.deleteShader(this.mFragmentShader);
+            gl.deleteProgram(this.mCompiledShader);
+        }
+    }
 }
 
 
@@ -93,7 +108,6 @@ export class SimpleShader {
 // Returns a compiled shader from a shader in the dom.
 // The id is the id of the script in the html tag.
 function compileShader(filePath: string, shaderType: number) {
-    let shaderSource: string | null = null;
     let compiledShader: WebGLShader | null = null;
 
     const gl = glSys.get();
@@ -102,7 +116,7 @@ function compileShader(filePath: string, shaderType: number) {
     }
 
     // Step A: Access the shader text file
-    shaderSource = text.get(filePath) || null;
+    const shaderSource = text.get(filePath) as string;
 
     if (!shaderSource) {
         throw new Error('WARNING:' + filePath + ' not loaded!');
@@ -122,11 +136,12 @@ function compileShader(filePath: string, shaderType: number) {
     // The log info is how shader compilation errors are typically displayed.
     // This is useful for debugging the shaders.
     if (!gl.getShaderParameter(compiledShader, gl.COMPILE_STATUS)) {
-        throw new Error('Shader ['+ filePath +'] compiling error: ' + gl.getShaderInfoLog(compiledShader + '!'));
+        throw new Error('Shader [' + filePath + '] compiling error: ' + gl.getShaderInfoLog(compiledShader + '!'));
     }
 
     return compiledShader;
 }
+
 //-- end of private methods
 
 export default SimpleShader;

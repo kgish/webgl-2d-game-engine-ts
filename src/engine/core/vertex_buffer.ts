@@ -15,6 +15,18 @@ function get() {
     return mGLVertexBuffer;
 }
 
+function cleanUp() {
+    const gl = glSys.get();
+    if (!gl) {
+        throw new Error('Cannot get GL!');
+    }
+
+    if (mGLVertexBuffer !== null) {
+        gl.deleteBuffer(mGLVertexBuffer);
+        mGLVertexBuffer = null;
+    }
+}
+
 // First: define the vertices for a square
 const mVerticesOfSquare = [
     0.5, 0.5, 0.0,
@@ -26,7 +38,6 @@ const mVerticesOfSquare = [
 function init() {
 
     const gl = glSys.get();
-
     if (!gl) {
         throw new Error('Cannot get GL!');
     }
@@ -41,4 +52,4 @@ function init() {
     gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(mVerticesOfSquare), gl.STATIC_DRAW);
 }
 
-export { init, get };
+export { init, get, cleanUp };

@@ -11,9 +11,9 @@ import engine from '../../engine/index';
 import Renderable from '../../engine/renderable';
 
 class SceneFileParser {
-    xml: Document;
+    xml: XMLDocument;
 
-    constructor(xml: Document) {
+    constructor(xml: XMLDocument) {
         this.xml = xml;
     }
 
@@ -64,7 +64,7 @@ class SceneFileParser {
     }
 }
 
-function getElm(xmlContent: Document, tagElm: string) {
+function getElm(xmlContent: XMLDocument, tagElm: string) {
     const theElm = xmlContent.getElementsByTagName(tagElm);
     if (theElm.length === 0) {
         console.error('Warning: Level element:[' + tagElm + ']: is not found!');
