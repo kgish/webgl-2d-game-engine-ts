@@ -44,42 +44,25 @@ yarn test
 
 ## Static files (assets)
 
-In order to get the static files loaded correctly, e.g. the GLSL shaders, I needed to install the parcel2 plugin [parcel-reporter-multiple-static-file-copier](https://www.npmjs.com/package/parcel-reporter-multiple-static-file-copier).
+In order to get the static files loaded correctly, e.g. the GLSL shaders, I needed to install the parcel2 plugin [parcel-plugin-static-files-copy](https://github.com/elwin013/parcel-plugin-static-files-copy).
 
 ```
-yarn add parcel-reporter-static-files-copy --dev
+yarn add parcel-plugin-static-files-copy --dev
 ```
 
-Then I created a new `public` directory in the project root, moved all of the assets there, and modified the `.parcelrc` file to include:
-
-```
-{
-  "extends": ["@parcel/config-default"],
-  "reporters":  ["...", "parcel-reporter-static-files-copy"]
-}
-```
-
-Finally, I added the following lines to the `package.json` file:
+Then I created a new `public` directory in the project root, moved all of the assets there, and modified the `.package.json` file:
 
 ```
 {
   ...
   "staticFiles": {
-    "staticPath": "public",
+    "staticPath": ["public", "src/glsl_shaders"],
     "watcherGlob": "**"
   },
-  "multipleStaticFileCopier": [
-    {
-      "origin": "public",
-      "destination": "dist/"
-    },
-    {
-      "origin": "src/glsl_shaders",
-      "destination": "public/glsl_shaders"
-    }
-  ],
   ...    
 ```
+
+This results in the `public` and `src/glsl_shaders` being copied to the `dist` directory.
 
 ## References
 
@@ -90,4 +73,4 @@ Finally, I added the following lines to the `package.json` file:
 * [EsLint](https://eslint.org)
 * [Stylelint](https://stylelint.io)
 * [Parcel](https://parceljs.org)
-* [parcel-reporter-multiple-static-file-copier](https://www.npmjs.com/package/parcel-reporter-multiple-static-file-copier)
+* [parcel-plugin-static-files-copy](https://github.com/elwin013/parcel-plugin-static-files-copy)
