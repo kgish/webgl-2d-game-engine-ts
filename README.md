@@ -18,25 +18,32 @@ yarn
 
 ## Run
 
+The following commands are defined in the `package.json` file and can be executed by running `yarn <command>`.
+
+### Dev
+
 ```bash
+# parcel index.html
 yarn dev
 ```
 
 Point your favorite browser to `http://localhost:1234` and enjoy!
 
-## Build
+### Build
 
 ```bash
+# parcel build index.html --no-source-maps --public-url .
 yarn build
 ```
 
 ## Lint
 
 ```bash
+# eslint . --ext .ts && stylelint  \"**/*.scss\"
 yarn lint
 ```
 
-## Test
+### Test
 
 ```bash
 yarn test
@@ -44,7 +51,7 @@ yarn test
 
 ## Static files (assets)
 
-In order to get the static files loaded correctly, e.g. the GLSL shaders, I needed to install the parcel2 plugin [parcel-plugin-static-files-copy](https://github.com/elwin013/parcel-plugin-static-files-copy).
+In order to get the static files loaded correctly, e.g. the assets and GLSL shaders, you need to install the parcel plugin [parcel-plugin-static-files-copy](https://github.com/elwin013/parcel-plugin-static-files-copy).
 
 ```
 yarn add parcel-plugin-static-files-copy --dev
@@ -55,14 +62,14 @@ Then I created a new `public` directory in the project root, moved all of the as
 ```
 {
   ...
-  "staticFiles": {
-    "staticPath": ["public", "src/glsl_shaders"],
-    "watcherGlob": "**"
-  },
+    "staticFiles": {
+        "staticPath": ["src/assets", "src/glsl_shaders"],
+        "watcherGlob": "**"
+    },
   ...    
 ```
 
-This results in the `public` and `src/glsl_shaders` being copied to the `dist` directory.
+This assets and shaders are copied to the `dist` directory where they can be accessed the usual way as `assets/*` or `glsl_shaders/*`.
 
 ## References
 
