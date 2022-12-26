@@ -68,15 +68,16 @@ function init() {
     }
 }
 
-function decodeResource(data) {
+function decodeResource(data: Response) {
     return data.arrayBuffer();
 }
 
-function parseResource(data) {
+function parseResource(data: ArrayBuffer) {
     return mAudioContext?.decodeAudioData(data);
 }
 
 function load(path: string) {
+    // @ts-ignore
     return map.loadDecodeParse(path, decodeResource, parseResource);
 }
 
@@ -84,12 +85,14 @@ function playCue(path: string, volume: number) {
     const source = mAudioContext?.createBufferSource();
 
     if (source) {
-        source.buffer = map.get(path);
+        source.buffer = map.get(path) as AudioBuffer;
         source.start(0);
 
-        // volume support for cue
-        source.connect(mCueGain);
-        mCueGain.gain.value = volume;
+        if (mCueGain) {
+            // volume support for cue
+            source.connect(mCueGain);
+            mCueGain.gain.value = volume;
+        }
     }
 }
 
@@ -97,12 +100,12 @@ function playBackground(path: string, volume: number) {
     if (has(path) && mAudioContext) {
         stopBackground();
         mBackgroundAudio = mAudioContext.createBufferSource();
-        mBackgroundAudio.buffer = map.get(path);
+        mBackgroundAudio.buffer = map.get(path) as AudioBuffer;
         mBackgroundAudio.loop = true;
         mBackgroundAudio.start(0);
 
         // connect volume accordingly
-        mBackgroundAudio.connect(mBackgroundGain);
+        mBackgroundAudio.connect(mBackgroundGain as AudioNode);
         setBackgroundVolume(volume);
     }
 }

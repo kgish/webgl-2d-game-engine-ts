@@ -5,8 +5,10 @@
  *
  */
 
+type Data = string | XMLDocument | AudioBuffer;
+
 class MapEntry {
-    mData: string | XMLDocument | null;
+    mData: Data | null;
     mRefCount: number;
 
     constructor(data: string | null) {
@@ -22,7 +24,7 @@ class MapEntry {
         this.mRefCount++;
     }
 
-    set(data: string | XMLDocument) {
+    set(data: Data) {
         this.mData = data;
     }
 
@@ -38,7 +40,7 @@ function has(path: string) {
     return mMap.has(path);
 }
 
-function set(key: string, value: string | XMLDocument) {
+function set(key: string, value: Data) {
     const entry = mMap.get(key);
     if (entry) {
         entry.set(value);
@@ -70,7 +72,7 @@ function get(path: string) {
 //   Step 3: parseResource on the decodedResource
 //   Step 4: store result into the map
 // Push the promised operation into an array
-function loadDecodeParse(path: string, decodeResource: (data: Response) => Promise<string>, parseResource: (text: string) => string | XMLDocument) {
+function loadDecodeParse(path: string, decodeResource: (data: Response) => Promise<ArrayBuffer>, parseResource: (data: ArrayBuffer) => Promise<AudioBuffer>) {
     let fetchPromise: Promise<void> | null = null;
     if (!has(path)) {
         loadRequested(path);
