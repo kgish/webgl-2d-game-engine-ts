@@ -51,25 +51,22 @@ yarn test
 
 ## Static files (assets)
 
-In order to get the static files loaded correctly, e.g. the assets and GLSL shaders, you need to install the parcel plugin [parcel-plugin-static-files-copy](https://github.com/elwin013/parcel-plugin-static-files-copy).
+In order to get the static files loaded correctly, e.g. the assets and GLSL shaders, you need to install the parcel plugin [parcel-reporter-static-files-copy](https://github.com/elwin013/parcel-reporter-static-files-copy).
 
 ```
-yarn add parcel-plugin-static-files-copy --dev
+yarn add parcel-reporter-static-files-copy --dev
 ```
 
-Then I created a new `public` directory in the project root, moved all of the assets there, and modified the `.package.json` file:
+Then I created a new `static` directory in the project root, moved the `assets` and `glsl_shaders` directories there, and then modified the `.parcelrc` file:
 
 ```
 {
-  ...
-    "staticFiles": {
-        "staticPath": ["src/assets", "src/glsl_shaders"],
-        "watcherGlob": "**"
-    },
-  ...    
+  "extends": ["@parcel/config-default"],
+  "reporters":  ["...", "parcel-reporter-static-files-copy"]
+}
 ```
 
-This assets and shaders are copied to the `dist` directory where they can be accessed the usual way as `assets/*` or `glsl_shaders/*`.
+where the assets and shaders can now be accessed the usual way as `assets/*` or `glsl_shaders/*`.
 
 ## References
 
@@ -80,4 +77,4 @@ This assets and shaders are copied to the `dist` directory where they can be acc
 * [EsLint](https://eslint.org)
 * [Stylelint](https://stylelint.io)
 * [Parcel](https://parceljs.org)
-* [parcel-plugin-static-files-copy](https://github.com/elwin013/parcel-plugin-static-files-copy)
+* [parcel-reporter-static-files-copy](https://github.com/elwin013/parcel-reporter-static-files-copy)

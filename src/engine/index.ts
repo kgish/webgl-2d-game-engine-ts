@@ -8,6 +8,7 @@
  */
 
 // Resources
+import * as audio from './resources/audio';
 import * as xml from './resources/xml';
 import * as text from './resources/text';
 
@@ -30,10 +31,12 @@ function init(htmlCanvasID: string) {
     vertexBuffer.init();
     shaderResources.init();
     input.init();
+    audio.init();
 }
 
 function cleanUp() {
     loop.cleanUp();
+    audio.cleanUp();
     input.cleanUp();
     shaderResources.cleanUp();
     vertexBuffer.cleanUp();
@@ -52,7 +55,7 @@ function clearCanvas(color: number[]) {
 
 export default {
     // resource support
-    text, xml,
+    audio, text, xml,
 
     // input support
     input,

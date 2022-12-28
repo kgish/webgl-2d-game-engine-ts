@@ -1,12 +1,13 @@
 /*
  * File: loop.ts
  *
- * interfaces with HTML5 to implement looping functionality, supports start/end loop
+ * Interfaces with HTML5 to implement looping functionality, supports start/end loop
  *
  */
 
 interface IScene {
     load: () => void;
+    unload: () => void;
     draw: () => void;
     update: () => void;
     init: () => void;
@@ -33,41 +34,44 @@ function loopOnce() {
         // Step A: set up for next call to loopOnce
         mFrameID = requestAnimationFrame(loopOnce);
 
-        // Step B: now let's draw
-        //         draw() MUST be called before update()
-        //         as update() may stop the loop!
-        mCurrentScene?.draw();
+        if (mCurrentScene) {
+            // Step B: now let's draw
+            //         draw() MUST be called before update()
+            //         as update() may stop the loop!
+            mCurrentScene.draw();
 
-        // Step C: compute how much time has elapsed since  last loopOnce was executed
-        const currentTime = performance.now();
-        const elapsedTime = currentTime - mPrevTime;
-        mPrevTime = currentTime;
-        mLagTime += elapsedTime;
+            // Step C: compute how much time has elapsed since  last loopOnce was executed
+            const currentTime = performance.now();
+            const elapsedTime = currentTime - mPrevTime;
+            mPrevTime = currentTime;
+            mLagTime += elapsedTime;
 
-        // Step D: Make sure we update the game the appropriate number of times.
-        //      Update only every kMPF (1/60 of a second)
-        //      If lag larger then update frames, update until caught up.
-        while ((mLagTime >= kMPF) && mLoopRunning) {
-            input.update();
-            mCurrentScene?.update();
-            mLagTime -= kMPF;
+            // Step D: Make sure we update the game the appropriate number of times.
+            //      Update only every kMPF (1/60 of a second)
+            //      If lag larger then update frames, update until caught up.
+            while ((mLagTime >= kMPF) && mLoopRunning) {
+                input.update();
+                mCurrentScene.update();
+                mLagTime -= kMPF;
+            }
         }
     }
 }
 
 async function start(scene: IScene) {
+    console.log('loop.ts start()');
     if (mLoopRunning) {
         throw new Error('loop already running!');
     }
 
     mCurrentScene = scene;
+    console.log('loop.ts start() mCurrentScene.load()');
     mCurrentScene.load();
 
     // Wait for any async requests before game-load
     await map.waitOnPromises();
 
     mCurrentScene.init();
-
     mPrevTime = performance.now();
     mLagTime = 0.0;
     mLoopRunning = true;
@@ -80,8 +84,16 @@ function stop() {
     cancelAnimationFrame(mFrameID);
 }
 
-// eslint-disable-next-line @typescript-eslint/no-empty-function
 function cleanUp() {
+    if (mLoopRunning) {
+        stop();
+
+        // unload all resources
+        if (mCurrentScene) {
+            mCurrentScene.unload();
+            mCurrentScene = null;
+        }
+    }
 }
 
 export { start, stop, cleanUp };

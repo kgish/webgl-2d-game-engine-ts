@@ -23,9 +23,31 @@ class MyGame extends engine.Scene {
     mHero: Renderable | null = null;
     mSupport: Renderable | null = null;
 
+    // audio clips: supports both mp3 and wav formats
+    mBackgroundAudio = 'assets/sounds/bg_clip.mp3';
+    mCue = 'assets/sounds/my_game_cue.wav';
+
     constructor() {
         super();
     }
+
+    load() {
+        console.log('my_game load()');
+        // loads the audios
+        engine.audio.load(this.mBackgroundAudio);
+        engine.audio.load(this.mCue);
+    }
+
+    unload() {
+        // Step A: Game loop not running, unload all assets
+        // stop the background audio
+        engine.audio.stopBackground();
+
+        // unload the scene resources
+        engine.audio.unload(this.mBackgroundAudio);
+        engine.audio.unload(this.mCue);
+    }
+
 
     init() {
         // Step A: set up the cameras
@@ -47,6 +69,9 @@ class MyGame extends engine.Scene {
         this.mHero.setColor([ 0, 0, 1, 1 ]);
         this.mHero.getXform().setPosition(20, 60);
         this.mHero.getXform().setSize(2, 3);
+
+        // now start the Background music ...
+        engine.audio.playBackground(this.mBackgroundAudio, 1.0);
     }
 
 
@@ -78,6 +103,8 @@ class MyGame extends engine.Scene {
         if (xform) {
             // Support hero movements
             if (engine.input.isKeyPressed(engine.input.keys.Right)) {
+                engine.audio.playCue(this.mCue, 0.5);
+                engine.audio.incBackgroundVolume(0.05);
                 xform.incXPosBy(deltaX);
                 if (xform.getXPos() > 30) { // this is the right-bound of the window
                     xform.setPosition(12, 60);
@@ -85,6 +112,8 @@ class MyGame extends engine.Scene {
             }
 
             if (engine.input.isKeyPressed(engine.input.keys.Left)) {
+                engine.audio.playCue(this.mCue, 1.5);
+                engine.audio.incBackgroundVolume(-0.05);
                 xform.incXPosBy(-deltaX);
                 if (xform.getXPos() < 11) {  // this is the left-bound of the window
                     this.next();
@@ -105,11 +134,12 @@ class MyGame extends engine.Scene {
     }
 }
 
-export default MyGame;
-
-window.onload = function () {
+window.addEventListener('load', () => {
+    console.log('my_game.ts window.onload()');
     engine.init("GLCanvas");
 
     const myGame = new MyGame();
     myGame.start();
-};
+});
+
+export default MyGame;
