@@ -7,11 +7,13 @@
 
 import { mat4 } from 'gl-matrix';
 
-import * as glSys from './core/gl';
-import * as vertexBuffer from './core/vertex_buffer';
-import * as text from './resources/text';
+import * as text from '../resources/text';
+import * as glSys from '../core/gl';
+import * as vertexBuffer from '../core/vertex_buffer';
 
 export class SimpleShader {
+    // instance variables
+    // Convention: all instance variables: mVariables
     mCompiledShader: WebGLProgram | null;  // reference to the compiled shader in webgl context
     mVertexPositionRef: GLint; // reference to VertexPosition within the shader
     mVertexShader: WebGLShader | null;
@@ -26,7 +28,7 @@ export class SimpleShader {
         if (!gl) {
             throw new Error('Cannot get GL!');
         }
-
+        //
         // Step A: Load and compile vertex and fragment shaders
         this.mVertexShader = compileShader(vertexShaderPath, gl.VERTEX_SHADER);
         this.mFragmentShader = compileShader(fragmentShaderPath, gl.FRAGMENT_SHADER);
@@ -65,6 +67,7 @@ export class SimpleShader {
         if (!gl) {
             throw new Error('Cannot get GL!');
         }
+
         gl.useProgram(this.mCompiledShader);
 
         // bind vertex buffer

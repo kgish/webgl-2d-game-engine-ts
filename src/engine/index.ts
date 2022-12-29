@@ -16,7 +16,7 @@ import * as text from './resources/text';
 import * as input from './input';
 import Camera from './camera';
 import Transform from './transform';
-import Renderable from './renderable';
+import Renderable from './renderables/renderable';
 import Scene from './scene';
 
 // Local to this file only

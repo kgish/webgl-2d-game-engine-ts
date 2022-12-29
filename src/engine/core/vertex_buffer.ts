@@ -25,6 +25,11 @@ function cleanUp() {
         gl.deleteBuffer(mGLVertexBuffer);
         mGLVertexBuffer = null;
     }
+
+    if (mGLTextureCoordBuffer !== null) {
+        gl.deleteBuffer(mGLTextureCoordBuffer);
+        mGLTextureCoordBuffer = null;
+    }
 }
 
 // First: define the vertices for a square
@@ -35,8 +40,22 @@ const mVerticesOfSquare = [
     -0.5, -0.5, 0.0
 ];
 
-function init() {
+// reference to the texture coordinates for the square vertices in the gl context
+let mGLTextureCoordBuffer: WebGLBuffer | null = null;
 
+function getTexCoord() {
+    return mGLTextureCoordBuffer;
+}
+
+// Second: define the corresponding texture coordinates
+const mTextureCoordinates = [
+    1.0, 1.0,
+    0.0, 1.0,
+    1.0, 0.0,
+    0.0, 0.0
+];
+
+function init() {
     const gl = glSys.get();
     if (!gl) {
         throw new Error('Cannot get GL!');
@@ -50,6 +69,16 @@ function init() {
 
     // Step C: Loads mVerticesOfSquare into the vertexBuffer
     gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(mVerticesOfSquare), gl.STATIC_DRAW);
+
+    // Step  D: Allocate and store texture coordinates
+    // Create a buffer on the gl context for texture coordinates
+    mGLTextureCoordBuffer = gl.createBuffer();
+
+    // Activate texture coordinate buffer
+    gl.bindBuffer(gl.ARRAY_BUFFER, mGLTextureCoordBuffer);
+
+    // Loads textureCoordinates into the mGLTextureCoordBuffer
+    gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(mTextureCoordinates), gl.STATIC_DRAW);
 }
 
-export { init, get, cleanUp };
+export { init, get, cleanUp, getTexCoord };

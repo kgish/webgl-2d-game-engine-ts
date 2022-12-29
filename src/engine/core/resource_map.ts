@@ -5,7 +5,9 @@
  *
  */
 
-type Data = string | XMLDocument | AudioBuffer;
+import { TextureInfo } from '../resources/texture';
+
+type Data = string | XMLDocument | AudioBuffer | TextureInfo ;
 
 class MapEntry {
     mData: Data | null;
