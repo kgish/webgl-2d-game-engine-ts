@@ -7,14 +7,16 @@
 
 import * as glSys from '../core/gl';
 import * as shaderResources from '../core/shader_resources';
+
 import Transform from '../transform';
 import SimpleShader from '../shaders/simple_shader';
 import Camera from '../../engine/camera';
+import TextureShader from '../shaders/texture_shader';
 
 class Renderable {
-    mShader: SimpleShader | null; // the shader for shading this object
-    mXform: Transform;            // the transform object
-    mColor: number[];             // color of pixel
+    mShader: SimpleShader | TextureShader | null; // the shader for shading this object
+    mXform: Transform; // the transform object
+    mColor: number[];  // color of pixel
 
     constructor() {
         this.mShader = shaderResources.getConstColorShader();
@@ -43,7 +45,7 @@ class Renderable {
     getColor = () => this.mColor;
 
     // this is private/protected
-    _setShader(s: SimpleShader) {
+    _setShader(s: SimpleShader | TextureShader) {
         this.mShader = s;
     }
 }

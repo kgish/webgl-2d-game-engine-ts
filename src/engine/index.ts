@@ -9,15 +9,19 @@
 
 // Resources
 import * as audio from './resources/audio';
-import * as xml from './resources/xml';
 import * as text from './resources/text';
+import * as xml from './resources/xml';
+import * as texture from './resources/texture';
 
 // General utilities
 import * as input from './input';
 import Camera from './camera';
-import Transform from './transform';
-import Renderable from './renderables/renderable';
 import Scene from './scene';
+import Transform from './transform';
+
+// Renderables
+import Renderable from './renderables/renderable';
+import TextureRenderable from './renderables/texture_renderable';
 
 // Local to this file only
 import * as glSys from './core/gl';
@@ -55,13 +59,16 @@ function clearCanvas(color: number[]) {
 
 export default {
     // resource support
-    audio, text, xml,
+    audio, text, xml, texture,
 
     // input support
     input,
 
     // Util classes
-    Camera, Scene, Transform, Renderable,
+    Camera, Scene, Transform,
+
+    // Renderables
+    Renderable, TextureRenderable,
 
     // functions
     init, cleanUp, clearCanvas
