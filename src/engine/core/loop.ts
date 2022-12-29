@@ -59,13 +59,11 @@ function loopOnce() {
 }
 
 async function start(scene: IScene) {
-    console.log('loop.ts start()');
     if (mLoopRunning) {
         throw new Error('loop already running!');
     }
 
     mCurrentScene = scene;
-    console.log('loop.ts start() mCurrentScene.load()');
     mCurrentScene.load();
 
     // Wait for any async requests before game-load

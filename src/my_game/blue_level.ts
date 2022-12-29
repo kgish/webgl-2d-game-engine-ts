@@ -11,7 +11,7 @@ import engine from '../engine/index';
 // Local stuff
 import MyGame from './my_game';
 import SceneFileParser from './util/scene_file_parser';
-import Renderable from '../engine/renderable';
+import Renderable from '../engine/renderables/renderable';
 import Camera from '../engine/camera';
 
 class BlueLevel extends engine.Scene {
@@ -19,7 +19,7 @@ class BlueLevel extends engine.Scene {
     // scene file name
     mSceneFile = 'assets/blue_level.xml';
     // all squares
-    mSQSet: Renderable[] = [];        // these are the Renderable objects
+    mSqSet: Renderable[] = [];        // these are the Renderable objects
 
     // The camera to view the scene
     mCamera: Camera | null = null;
@@ -28,50 +28,73 @@ class BlueLevel extends engine.Scene {
     mBackgroundAudio = 'assets/sounds/bg_clip.mp3';
     mCue = 'assets/sounds/blue_level_cue.wav';
 
+    // textures: (Note: jpg does not support transparency)
+    kPortal = 'assets/minion_portal.jpg';
+    kCollector = 'assets/minion_collector.jpg';
+
     constructor() {
         super();
     }
 
     load() {
+        // load the scene file
         engine.xml.load(this.mSceneFile);
+
+        // load the audio files
         engine.audio.load(this.mBackgroundAudio);
         engine.audio.load(this.mCue);
-    }
 
-    init() {
-        const sceneParser = new SceneFileParser(engine.xml.get(this.mSceneFile) as XMLDocument);
-
-        // Step A: Read in the camera
-        this.mCamera = sceneParser.parseCamera();
-
-        // Step B: Read all the squares
-        sceneParser.parseSquares(this.mSQSet);
-
-        // now start the Background music ...
-        engine.audio.playBackground(this.mBackgroundAudio, 0.5);
+        // load the texture files
+        engine.texture.load(this.kPortal);
+        engine.texture.load(this.kCollector);
     }
 
     unload() {
         // stop the background audio
         engine.audio.stopBackground();
 
-        // unload the scene flie and loaded resources
+        // unload the scene file and loaded resources
         engine.xml.unload(this.mSceneFile);
         engine.audio.unload(this.mBackgroundAudio);
         engine.audio.unload(this.mCue);
 
+        // unload the texture files
+        engine.texture.unload(this.kPortal);
+        engine.texture.unload(this.kCollector);
+    }
+
+    next() {
+        super.next();
+        const nextLevel = new MyGame();  // load the next level
+        nextLevel.start();
+    }
+
+    init() {
+        const sceneParser = new SceneFileParser(engine.xml.get(this.mSceneFile) as string);
+
+        // Step A: Read in the camera
+        this.mCamera = sceneParser.parseCamera();
+
+        // Step B: Read all the squares and texture squares
+        sceneParser.parseSquares(this.mSqSet);
+        sceneParser.parseTextureSquares(this.mSqSet);
+
+        // now start the Background music ...
+        engine.audio.playBackground(this.mBackgroundAudio, 0.5);
     }
 
     // This is the draw function, make sure to setup proper drawing environment, and more
     // importantly, make sure to _NOT_ change any state.
     draw() {
+        // Step A: clear the canvas
+        engine.clearCanvas([0.9, 0.9, 0.9, 1.0]); // clear to light gray
+
         if (this.mCamera) {
-            // Step A: set up the camera
+            // Step B: set up the camera
             this.mCamera.setViewAndCameraMatrix();
-            // Step B: draw everything with the camera
-            let i;
-            for (i = 0; i < this.mSQSet.length; i++) {
-                this.mSQSet[i].draw(this.mCamera);
+            // Step C: draw everything with the camera
+            for (let i = 0; i < this.mSqSet.length; i++) {
+                this.mSqSet[i].draw(this.mCamera);
             }
         }
     }
@@ -80,7 +103,7 @@ class BlueLevel extends engine.Scene {
     // anything from this function!
     update() {
         // For this very simple game, let's move the first square
-        const xform = this.mSQSet[1].getXform();
+        const xform = this.mSqSet[1].getXform();
         const deltaX = 0.05;
 
         // Move right and swap over
@@ -103,13 +126,14 @@ class BlueLevel extends engine.Scene {
 
         if (engine.input.isKeyPressed(engine.input.keys.Q))
             this.stop();  // Quit the game
-    }
 
-
-    next() {
-        super.next();
-        const nextLevel = new MyGame();  // load the next level
-        nextLevel.start();
+        // continuously change texture tinting
+        const c = this.mSqSet[1].getColor();
+        let ca = c[3] + deltaX;
+        if (ca > 1) {
+            ca = 0;
+        }
+        c[3] = ca;
     }
 }
 

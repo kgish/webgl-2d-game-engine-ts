@@ -19,7 +19,6 @@ class Scene {
     }
 
     async start() {
-        console.log('scene.ts async start()');
         await loop.start(this);
     }
 

@@ -12,7 +12,7 @@ import engine from '../engine/index';
 // User stuff
 import BlueLevel from './blue_level';
 import Camera from '../engine/camera';
-import Renderable from '../engine/renderable';
+import Renderable from '../engine/renderables/renderable';
 
 class MyGame extends engine.Scene {
 
@@ -32,7 +32,6 @@ class MyGame extends engine.Scene {
     }
 
     load() {
-        console.log('my_game load()');
         // loads the audios
         engine.audio.load(this.mBackgroundAudio);
         engine.audio.load(this.mCue);
@@ -135,7 +134,6 @@ class MyGame extends engine.Scene {
 }
 
 window.addEventListener('load', () => {
-    console.log('my_game.ts window.onload()');
     engine.init("GLCanvas");
 
     const myGame = new MyGame();
