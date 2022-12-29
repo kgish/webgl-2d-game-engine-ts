@@ -68,18 +68,11 @@ function init() {
     }
 }
 
-function decodeResource(data: Response) {
-    return data.arrayBuffer();
-}
+const decodeAudio = (data: Response) => data.arrayBuffer();
 
-function parseResource(data: ArrayBuffer) {
-    return mAudioContext?.decodeAudioData(data);
-}
+const parseAudio = (data: ArrayBuffer) => mAudioContext?.decodeAudioData(data);
 
-function load(path: string) {
-    // @ts-ignore
-    return map.loadDecodeParse(path, decodeResource, parseResource);
-}
+const load = (path: string) => map.loadDecodeParse(path, decodeAudio, parseAudio);
 
 function playCue(path: string, volume: number) {
     const source = mAudioContext?.createBufferSource();

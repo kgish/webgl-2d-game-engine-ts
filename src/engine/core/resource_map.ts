@@ -7,7 +7,7 @@
 
 import { TextureInfo } from '../resources/texture';
 
-type Data = string | XMLDocument | AudioBuffer | TextureInfo ;
+type Data = string | XMLDocument | AudioBuffer | TextureInfo;
 
 class MapEntry {
     mData: Data | null;
@@ -63,7 +63,7 @@ function incRef(path: string) {
 // returns the resource of path. An error to if path is not found
 function get(path: string) {
     if (!has(path)) {
-        throw new Error('Error [' + path + ']: not loaded!');
+        throw new Error('Error [' + JSON.stringify(path) + ']: not loaded!');
     }
     return mMap.get(path)?.data() || null;
 }
@@ -74,7 +74,13 @@ function get(path: string) {
 //   Step 3: parseResource on the decodedResource
 //   Step 4: store result into the map
 // Push the promised operation into an array
-function loadDecodeParse(path: string, decodeResource: (data: Response) => Promise<ArrayBuffer>, parseResource: (data: ArrayBuffer) => Promise<AudioBuffer>) {
+// type DecodeResourceFn = (data: Response) => string | Promise<ArrayBuffer> | Promise<string>;
+// type ParseResourceFn =
+//     ((data: string) => string)
+//     | ((data: ArrayBuffer) => Promise<AudioBuffer> | undefined)
+//     | ((data: string) => XMLDocument);
+
+function loadDecodeParse(path: string, decodeResource: any, parseResource: any) {
     let fetchPromise: Promise<void> | null = null;
     if (!has(path)) {
         loadRequested(path);

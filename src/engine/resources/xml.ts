@@ -15,7 +15,7 @@ const mParser = new DOMParser();
 
 const decodeXML = (data: Response) => data.text();
 
-const parseXML = (text: string) => mParser.parseFromString(text, "text/xml");
+const parseXML = (text: string) => mParser.parseFromString(text, 'text/xml') as XMLDocument;
 
 const load = (path: string) => map.loadDecodeParse(path, decodeXML, parseXML);
 
