@@ -22,6 +22,8 @@ import Transform from './transform';
 // Renderables
 import Renderable from './renderables/renderable';
 import TextureRenderable from './renderables/texture_renderable';
+import SpriteRenderable from './renderables/sprite_renderable';
+import { eTexCoordArrayIndex } from './renderables/sprite_renderable';
 
 // Local to this file only
 import * as glSys from './core/gl';
@@ -58,18 +60,21 @@ function clearCanvas(color: number[]) {
 }
 
 export default {
-    // resource support
+    // Resource support
     audio, text, xml, texture,
 
-    // input support
+    // Input support
     input,
 
     // Util classes
     Camera, Scene, Transform,
 
     // Renderables
-    Renderable, TextureRenderable,
+    Renderable, TextureRenderable, SpriteRenderable,
 
-    // functions
+    // Constants
+    eTexCoordArrayIndex,
+
+    // Functions
     init, cleanUp, clearCanvas
 };

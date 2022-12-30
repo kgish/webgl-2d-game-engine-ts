@@ -10,14 +10,13 @@ import * as texture from '../resources/texture';
 import * as shaderResources from '../core/shader_resources';
 
 import Camera from '../camera';
-import TextureShader from '../shaders/texture_shader';
 
 class TextureRenderable extends Renderable {
     mTexture;  // texture for this object, cannot be a "null"
     constructor(myTexture: string) {
         super();
         super.setColor([ 1, 1, 1, 0 ]); // Alpha of 0: switch off tinting of texture
-        super._setShader(shaderResources.getTextureShader() as TextureShader);
+        super._setShader(shaderResources.getTextureShader());
         this.mTexture = myTexture;  // texture for this object, cannot be a "null"
     }
 

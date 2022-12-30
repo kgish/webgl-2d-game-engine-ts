@@ -7,6 +7,8 @@
 
 import SimpleShader from '../shaders/simple_shader';
 import TextureShader from '../shaders/texture_shader';
+import SpriteShader from '../shaders/sprite_shader';
+
 import * as text from '../resources/text';
 import * as map from './resource_map';
 
@@ -19,10 +21,12 @@ let mConstColorShader: SimpleShader | null = null;
 const kTextureVS = 'glsl_shaders/texture_vs.glsl';  // Path to the VertexShader
 const kTextureFS = 'glsl_shaders/texture_fs.glsl';  // Path to the texture FragmentShader
 let mTextureShader: TextureShader | null = null;
+let mSpriteShader: SpriteShader | null = null;
 
 function createShaders() {
     mConstColorShader = new SimpleShader(kSimpleVS, kSimpleFS);
     mTextureShader = new TextureShader(kTextureVS, kTextureFS);
+    mSpriteShader = new SpriteShader(kTextureVS, kTextureFS);
 }
 
 function init() {
@@ -53,6 +57,10 @@ function cleanUp() {
         mTextureShader.cleanUp();
     }
 
+    if (mSpriteShader) {
+        mSpriteShader.cleanUp();
+    }
+
     text.unload(kSimpleVS);
     text.unload(kSimpleFS);
     text.unload(kTextureVS);
@@ -60,9 +68,7 @@ function cleanUp() {
 }
 
 const getConstColorShader = () => mConstColorShader;
+const getTextureShader = () => mTextureShader;
+const getSpriteShader = () => mSpriteShader;
 
-function getTextureShader() {
-    return mTextureShader;
-}
-
-export { init, cleanUp, getConstColorShader, getTextureShader };
+export { init, cleanUp, getConstColorShader, getTextureShader, getSpriteShader };

@@ -13,8 +13,10 @@ import SimpleShader from '../shaders/simple_shader';
 import Camera from '../../engine/camera';
 import TextureShader from '../shaders/texture_shader';
 
+type Shader = SimpleShader | TextureShader;
+
 class Renderable {
-    mShader: SimpleShader | TextureShader | null; // the shader for shading this object
+    mShader: Shader | null; // the shader for shading this object
     mXform: Transform; // the transform object
     mColor: number[];  // color of pixel
 
@@ -45,7 +47,7 @@ class Renderable {
     getColor = () => this.mColor;
 
     // this is private/protected
-    _setShader(s: SimpleShader | TextureShader) {
+    _setShader(s: Shader | null) {
         this.mShader = s;
     }
 }

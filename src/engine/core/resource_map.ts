@@ -63,7 +63,7 @@ function incRef(path: string) {
 // returns the resource of path. An error to if path is not found
 function get(path: string) {
     if (!has(path)) {
-        throw new Error('Error [' + JSON.stringify(path) + ']: not loaded!');
+        throw new Error('Error [' + path + ']: not loaded!');
     }
     return mMap.get(path)?.data() || null;
 }
