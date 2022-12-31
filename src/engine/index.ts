@@ -23,6 +23,7 @@ import Transform from './transform';
 import Renderable from './renderables/renderable';
 import TextureRenderable from './renderables/texture_renderable';
 import SpriteRenderable from './renderables/sprite_renderable';
+import SpriteAnimateRenderable, { eAnimationType } from './renderables/sprite_animate_renderable';
 import { eTexCoordArrayIndex } from './renderables/sprite_renderable';
 
 // Local to this file only
@@ -70,10 +71,11 @@ export default {
     Camera, Scene, Transform,
 
     // Renderables
-    Renderable, TextureRenderable, SpriteRenderable,
+    Renderable, TextureRenderable,
+    SpriteRenderable, SpriteAnimateRenderable,
 
     // Constants
-    eTexCoordArrayIndex,
+    eTexCoordArrayIndex, eAnimationType,
 
     // Functions
     init, cleanUp, clearCanvas
