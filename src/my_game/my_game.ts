@@ -14,63 +14,65 @@ import BlueLevel from './blue_level';
 import Camera from '../engine/camera';
 import SpriteRenderable from '../engine/renderables/sprite_renderable';
 import SpriteAnimateRenderable from '../engine/renderables/sprite_animate_renderable';
+import FontRenderable from '../engine/renderables/font_renderable';
 
 class MyGame extends engine.Scene {
-    // textures:
-    // kPortal = 'assets/minion_portal.png';      // supports png with transparency
-    // kCollector = 'assets/minion_collector.png';
+    // Textures
     kFontImage = 'assets/consolas-72.png';
     kMinionSprite = 'assets/minion_sprite.png';  // Portal and Collector are embedded here
+
+    // Fonts
+    kFontCon16 = 'assets/fonts/consolas-16';  // notice font names do not need extensions!
+    kFontCon24 = 'assets/fonts/consolas-24';
+    kFontCon32 = 'assets/fonts/consolas-32';  // this is also the default system font
+    kFontCon72 = 'assets/fonts/consolas-72';
+    kFontSeg96 = 'assets/fonts/segment7-96';
 
     // The camera to view the scene
     mCamera: Camera | null = null;
 
     // the hero and the support objects
-    // mHero: Renderable | null = null;
     mHero: SpriteRenderable | null = null;
-    // mPortal: Renderable | null = null;
-    mPortal: SpriteRenderable | null = null;
-    // mCollector: Renderable | null = null;
-    mCollector: SpriteRenderable | null = null;
     mFontImage: SpriteRenderable | null = null;
-    // mMinion: SpriteRenderable | null = null;
-    mRightMinion: SpriteAnimateRenderable | null = null;
-    mLeftMinion: SpriteAnimateRenderable | null = null;
+    mMinion: SpriteAnimateRenderable | null = null;
 
-    // audio clips: supports both mp3 and wav formats
-    // mBackgroundAudio = 'assets/sounds/bg_clip.mp3';
-    // mCue = 'assets/sounds/my_game_cue.wav';
+    mTextSysFont: FontRenderable | null = null;
+    mTextCon16: FontRenderable | null = null;
+    mTextCon24: FontRenderable | null = null;
+    mTextCon32: FontRenderable | null = null;
+    mTextCon72: FontRenderable | null = null;
+    mTextSeg96: FontRenderable | null = null;
+
+    mTextToWork: FontRenderable | null = null;
 
     constructor() {
         super();
     }
 
     load() {
-        // loads the audios
-        // engine.audio.load(this.mBackgroundAudio);
-        // engine.audio.load(this.mCue);
-
-        // loads the textures
-        // engine.texture.load(this.kPortal);
-        // engine.texture.load(this.kCollector);
+        // Step A: loads the textures
         engine.texture.load(this.kFontImage);
         engine.texture.load(this.kMinionSprite);
+
+        // Step B: loads all the fonts
+        engine.font.load(this.kFontCon16);
+        engine.font.load(this.kFontCon24);
+        engine.font.load(this.kFontCon32);
+        engine.font.load(this.kFontCon72);
+        engine.font.load(this.kFontSeg96);
     }
 
     unload() {
-        // Step A: Game loop not running, unload all assets
-        // stop the background audio
-        // engine.audio.stopBackground();
-
-        // unload the scene resources
-        // engine.audio.unload(this.mBackgroundAudio);
-        // engine.audio.unload(this.mCue);
-
         // Game loop not running, unload all assets
-        // engine.texture.unload(this.kPortal);
-        // engine.texture.unload(this.kCollector);
         engine.texture.unload(this.kFontImage);
         engine.texture.unload(this.kMinionSprite);
+
+        // unload the fonts
+        engine.font.unload(this.kFontCon16);
+        engine.font.unload(this.kFontCon24);
+        engine.font.unload(this.kFontCon32);
+        engine.font.unload(this.kFontCon72);
+        engine.font.unload(this.kFontSeg96);
     }
 
     next() {
@@ -84,80 +86,70 @@ class MyGame extends engine.Scene {
     init() {
         // Step A: set up the cameras
         this.mCamera = new engine.Camera(
-            vec2.fromValues(20, 60),         // position of the camera
-            20,                      // width of camera
-            [ 20, 40, 600, 300 ] // viewport (orgX, orgY, width, height)
+            vec2.fromValues(50, 33),         // position of the camera
+            100,                      // width of camera
+            [ 0, 0, 600, 400 ] // viewport (orgX, orgY, width, height)
         );
         this.mCamera.setBackgroundColor([ 0.8, 0.8, 0.8, 1 ]);
         // sets the background to gray
 
-        // Step B: Create the game objects
-        // this.mPortal = new engine.TextureRenderable(this.kPortal);
-        this.mPortal = new engine.SpriteRenderable(this.kMinionSprite);
-        this.mPortal.setColor([ 1, 0, 0, 0.2 ]);  // tints red
-        this.mPortal.getXform().setPosition(25, 60);
-        this.mPortal.getXform().setSize(3, 3);
-        this.mPortal.setElementPixelPositions(130, 310, 0, 180);
-
-        // this.mCollector = new engine.TextureRenderable(this.kCollector);
-        this.mCollector = new engine.SpriteRenderable(this.kMinionSprite);
-        this.mCollector.setColor([ 0, 0, 0, 0 ]);  // No tinting
-        this.mCollector.getXform().setPosition(15, 60);
-        this.mCollector.getXform().setSize(3, 3);
-        this.mCollector.setElementUVCoordinate(0.308, 0.483, 0, 0.352);
-
-        // Step C: Create the font and minion images using sprite
+        // Step B: Create the font and minion images using sprite
         this.mFontImage = new engine.SpriteRenderable(this.kFontImage);
         this.mFontImage.setColor([ 1, 1, 1, 0 ]);
-        this.mFontImage.getXform().setPosition(13, 62);
-        this.mFontImage.getXform().setSize(4, 4);
+        this.mFontImage.getXform().setPosition(15, 50);
+        this.mFontImage.getXform().setSize(20, 20);
 
         // The right minion
-        this.mRightMinion = new engine.SpriteAnimateRenderable(this.kMinionSprite);
-        this.mRightMinion.setColor([ 1, 1, 1, 0 ]);
-        this.mRightMinion.getXform().setPosition(26, 56.5);
-        this.mRightMinion.getXform().setSize(4, 3.2);
-        this.mRightMinion.setSpriteSequence(512, 0,     // first element pixel position: top-left 512 is top of image, 0 is left of image
-            204, 164,       // width x height in pixels
-            5,              // number of elements in this sequence
-            0);             // horizontal padding in between
-        this.mRightMinion.setAnimationType(engine.eAnimationType.eRight);
-        this.mRightMinion.setAnimationSpeed(50);
+        this.mMinion = new engine.SpriteAnimateRenderable(this.kMinionSprite);
+        this.mMinion.setColor([ 1, 1, 1, 0 ]);
+        this.mMinion.getXform().setPosition(15, 25);
+        this.mMinion.getXform().setSize(24, 19.2);
+        this.mMinion.setSpriteSequence(512, 0,     // first element pixel position: top-left 512 is top of image, 0 is left of image
+            204, 164,    // width x height in pixels
+            5,          // number of elements in this sequence
+            0);         // horizontal padding in between
+        this.mMinion.setAnimationType(engine.eAnimationType.eSwing);
+        this.mMinion.setAnimationSpeed(15);
         // show each element for mAnimSpeed updates
-
-        // the left minion
-        this.mLeftMinion = new engine.SpriteAnimateRenderable(this.kMinionSprite);
-        this.mLeftMinion.setColor([ 1, 1, 1, 0 ]);
-        this.mLeftMinion.getXform().setPosition(15, 56.5);
-        this.mLeftMinion.getXform().setSize(4, 3.2);
-        this.mLeftMinion.setSpriteSequence(348, 0,      // first element pixel position: top-left 164 from 512 is top of image, 0 is left of image
-            204, 164,       // width x height in pixels
-            5,              // number of elements in this sequence
-            0);             // horizontal padding in between
-        this.mLeftMinion.setAnimationType(engine.eAnimationType.eRight);
-        this.mLeftMinion.setAnimationSpeed(50);
-        // show each element for mAnimSpeed updates
-
-        // this.mMinion = new engine.SpriteRenderable(this.kMinionSprite);
-        // this.mMinion.setColor([ 1, 1, 1, 0 ]);
-        // this.mMinion.getXform().setPosition(26, 56);
-        // this.mMinion.getXform().setSize(5, 2.5);
-
-        // Step C: Create the hero object in blue
-        // this.mHero = new engine.Renderable();
-        // this.mHero.setColor([ 0, 0, 1, 1 ]);
-        // this.mHero.getXform().setPosition(20, 60);
-        // this.mHero.getXform().setSize(2, 3);
 
         // Step D: Create the hero object with texture from the lower-left corner
         this.mHero = new engine.SpriteRenderable(this.kMinionSprite);
         this.mHero.setColor([ 1, 1, 1, 0 ]);
-        this.mHero.getXform().setPosition(20, 60);
-        this.mHero.getXform().setSize(2, 3);
+        this.mHero.getXform().setPosition(35, 50);
+        this.mHero.getXform().setSize(12, 18);
         this.mHero.setElementPixelPositions(0, 120, 0, 180);
 
-        // now start the Background music ...
-        // engine.audio.playBackground(this.mBackgroundAudio, 1.0);
+        // Create the fonts
+        this.mTextSysFont = new engine.FontRenderable('System Font: in Red');
+        this._initText(this.mTextSysFont, 50, 60, [ 1, 0, 0, 1 ], 3);
+
+        this.mTextCon16 = new engine.FontRenderable('Consolas 16: in black');
+        this.mTextCon16.setFontName(this.kFontCon16);
+        this._initText(this.mTextCon16, 50, 55, [ 0, 0, 0, 1 ], 2);
+
+        this.mTextCon24 = new engine.FontRenderable('Consolas 24: in black');
+        this.mTextCon24.setFontName(this.kFontCon24);
+        this._initText(this.mTextCon24, 50, 50, [ 0, 0, 0, 1 ], 3);
+
+        this.mTextCon32 = new engine.FontRenderable('Consolas 32: in white');
+        this.mTextCon32.setFontName(this.kFontCon32);
+        this._initText(this.mTextCon32, 40, 40, [ 1, 1, 1, 1 ], 4);
+
+        this.mTextCon72 = new engine.FontRenderable('Consolas 72: in blue');
+        this.mTextCon72.setFontName(this.kFontCon72);
+        this._initText(this.mTextCon72, 30, 30, [ 0, 0, 1, 1 ], 6);
+
+        this.mTextSeg96 = new engine.FontRenderable('Segment7-92');
+        this.mTextSeg96.setFontName(this.kFontSeg96);
+        this._initText(this.mTextSeg96, 30, 15, [ 1, 1, 0, 1 ], 7);
+
+        this.mTextToWork = this.mTextCon16;
+    }
+
+    _initText(font: FontRenderable, posX: number, posY: number, color: number[], text: number) {
+        font.setColor(color);
+        font.getXform()?.setPosition(posX, posY);
+        font.setTextHeight(text);
     }
 
     // This is the draw function, make sure to setup proper drawing environment, and more
@@ -170,14 +162,18 @@ class MyGame extends engine.Scene {
             // Step  B: Activate the drawing Camera
             this.mCamera.setViewAndCameraMatrix();
 
-            // Step  C: draw everything
-            this.mPortal?.draw(this.mCamera);
-            this.mCollector?.draw(this.mCamera);
+            // Step  C: Draw everything
             this.mHero?.draw(this.mCamera);
             this.mFontImage?.draw(this.mCamera);
-            // this.mMinion?.draw(this.mCamera);
-            this.mRightMinion?.draw(this.mCamera);
-            this.mLeftMinion?.draw(this.mCamera);
+            this.mMinion?.draw(this.mCamera);
+
+            // Drawing the text output
+            this.mTextSysFont?.draw(this.mCamera);
+            this.mTextCon16?.draw(this.mCamera);
+            this.mTextCon24?.draw(this.mCamera);
+            this.mTextCon32?.draw(this.mCamera);
+            this.mTextCon72?.draw(this.mCamera);
+            this.mTextSeg96?.draw(this.mCamera);
         }
     }
 
@@ -185,50 +181,39 @@ class MyGame extends engine.Scene {
     // anything from this function!
     update() {
         // let's only allow the movement of hero,
-        // and if hero moves too far off, this level ends, we will
-        // load the next level
-        const deltaX = 0.05;
+        const deltaX = 0.5;
         const xform = this.mHero?.getXform();
 
-        if (xform) {
-            // Support hero movements
-            if (engine.input.isKeyPressed(engine.input.keys.Right)) {
-                // engine.audio.playCue(this.mCue, 0.5);
-                // engine.audio.incBackgroundVolume(0.05);
-                xform.incXPosBy(deltaX);
-                if (xform.getXPos() > 30) { // this is the right-bound of the window
-                    xform.setPosition(12, 60);
-                }
-            }
+        if (!xform) {
+            throw new Error('Cannot get hero xform!');
+        }
 
-            if (engine.input.isKeyPressed(engine.input.keys.Left)) {
-                // engine.audio.playCue(this.mCue, 1.5);
-                // engine.audio.incBackgroundVolume(-0.05);
-                xform.incXPosBy(-deltaX);
-                if (xform.getXPos() < 11) {  // this is the left-bound of the window
-                    // this.next();
-                    xform.setXPos(20);
-                }
+        // Support hero movements
+        if (engine.input.isKeyPressed(engine.input.keys.Right)) {
+            xform.incXPosBy(deltaX);
+            if (xform.getXPos() > 100) { // this is the right-bound of the window
+                xform.setPosition(0, 50);
             }
         }
 
-        // continuously change texture tinting
-        const c = this.mPortal?.getColor();
-        if (c) {
-            let ca = c[3] + deltaX;
-            if (ca > 1) {
-                ca = 0;
+        if (engine.input.isKeyPressed(engine.input.keys.Left)) {
+            xform.incXPosBy(-deltaX);
+            if (xform.getXPos() < 0) {  // this is the left-bound of the window
+                xform.setPosition(100, 50);
             }
-            c[3] = ca;
         }
 
-        // New update code for changing the sub-texture regions being shown"
+        // New update code for changing the sub-texture regions being shown
         const deltaT = 0.001;
 
-        // The font image:
+        // <editor-fold desc='The font image:'>
         // zoom into the texture by updating texture coordinate
         // For font: zoom to the upper left corner by changing bottom right
-        const texCoord = (this.mFontImage as SpriteRenderable).getElementUVCoordinateArray();
+        if (!this.mFontImage) {
+            throw new Error('Cannot get font image!');
+        }
+
+        const texCoord = this.mFontImage.getElementUVCoordinateArray();
         // The 8 elements:
         //      mTexRight,  mTexTop,          // x,y of top-right
         //      mTexLeft,   mTexTop,
@@ -242,7 +227,7 @@ class MyGame extends engine.Scene {
         if (r < 0) {
             r = 1.0;
         }
-        this.mFontImage?.setElementUVCoordinate(
+        this.mFontImage.setElementUVCoordinate(
             texCoord[engine.eTexCoordArrayIndex.eLeft],
             r,
             b,
@@ -250,78 +235,61 @@ class MyGame extends engine.Scene {
         );
         //
 
-        // // The minion image:
-        // // For minion: zoom to the bottom right corner by changing top left
-        // texCoord = this.mMinion?.getElementUVCoordinateArray() || [ 0, 0, 0, 0 ];
-        // // The 8 elements:
-        // //      mTexRight,  mTexTop,          // x,y of top-right
-        // //      mTexLeft,   mTexTop,
-        // //      mTexRight,  mTexBottom,
-        // //      mTexLeft,   mTexBottom
-        // let t = texCoord[engine.eTexCoordArrayIndex.eTop] - deltaT;
-        // let l = texCoord[engine.eTexCoordArrayIndex.eLeft] + deltaT;
-        //
-        // if (l > 0.5) {
-        //     l = 0;
-        // }
-        // if (t < 0.5) {
-        //     t = 1.0;
-        // }
-        //
-        // this.mMinion?.setElementUVCoordinate(
-        //     l,
-        //     texCoord[engine.eTexCoordArrayIndex.eRight],
-        //     texCoord[engine.eTexCoordArrayIndex.eBottom],
-        //     t
-        // );
+        // remember to update this.mMinion's animation
+        if (!this.mMinion) {
+            throw new Error('Cannot get minion!');
+        }
+        this.mMinion.updateAnimation();
 
-        // New code for controlling the sprite animation
-        // controlling the sprite animation:
-        // remember to update the minion's animation
-        if (this.mRightMinion && this.mLeftMinion) {
-            this.mRightMinion.updateAnimation();
-            this.mLeftMinion.updateAnimation();
+        // interactive control of the display size
 
-            // Animate left on the sprite sheet
-            if (engine.input.isKeyClicked(engine.input.keys.One)) {
-                this.mRightMinion.setAnimationType(engine.eAnimationType.eLeft);
-                this.mLeftMinion.setAnimationType(engine.eAnimationType.eLeft);
-            }
-
-            // swing animation
-            if (engine.input.isKeyClicked(engine.input.keys.Two)) {
-                this.mRightMinion.setAnimationType(engine.eAnimationType.eSwing);
-                this.mLeftMinion.setAnimationType(engine.eAnimationType.eSwing);
-            }
-
-            // Animate right on the sprite sheet
-            if (engine.input.isKeyClicked(engine.input.keys.Three)) {
-                this.mRightMinion.setAnimationType(engine.eAnimationType.eRight);
-                this.mLeftMinion.setAnimationType(engine.eAnimationType.eRight);
-            }
-
-            // decrease the duration of showing each sprite element, thereby speeding up the animation
-            if (engine.input.isKeyClicked(engine.input.keys.Four)) {
-                this.mRightMinion.incAnimationSpeed(-2);
-                this.mLeftMinion.incAnimationSpeed(-2);
-            }
-
-            // increase the duration of showing each sprite element, thereby slowing down the animation
-            if (engine.input.isKeyClicked(engine.input.keys.Five)) {
-                this.mRightMinion.incAnimationSpeed(2);
-                this.mLeftMinion.incAnimationSpeed(2);
-            }
+        // choose which text to work on
+        if (engine.input.isKeyClicked(engine.input.keys.Zero)) {
+            this.mTextToWork = this.mTextCon16;
+        }
+        if (engine.input.isKeyClicked(engine.input.keys.One)) {
+            this.mTextToWork = this.mTextCon24;
+        }
+        if (engine.input.isKeyClicked(engine.input.keys.Three)) {
+            this.mTextToWork = this.mTextCon32;
+        }
+        if (engine.input.isKeyClicked(engine.input.keys.Four)) {
+            this.mTextToWork = this.mTextCon72;
+        }
+        if (!this.mTextToWork) {
+            throw new Error('Cannot get text to work!');
         }
 
-        if (engine.input.isKeyPressed(engine.input.keys.Q))
-            this.stop();  // Quit the game
+        const deltaF = 0.005;
+        if (!this.mTextSysFont) {
+            throw new Error('Cannot get text system font!');
+        }
+        if (engine.input.isKeyPressed(engine.input.keys.Up)) {
+            if (engine.input.isKeyPressed(engine.input.keys.X)) {
+                this.mTextToWork.getXform()?.incWidthBy(deltaF);
+            }
+            if (engine.input.isKeyPressed(engine.input.keys.Y)) {
+                this.mTextToWork.getXform()?.incHeightBy(deltaF);
+            }
+            this.mTextSysFont.setText(this.mTextToWork.getXform()?.getWidth().toFixed(2) + 'x' + this.mTextToWork.getXform()?.getHeight().toFixed(2));
+        }
+
+        if (engine.input.isKeyPressed(engine.input.keys.Down)) {
+            if (engine.input.isKeyPressed(engine.input.keys.X)) {
+                this.mTextToWork.getXform()?.incWidthBy(-deltaF);
+            }
+            if (engine.input.isKeyPressed(engine.input.keys.Y)) {
+                this.mTextToWork.getXform()?.incHeightBy(-deltaF);
+            }
+            this.mTextSysFont.setText(this.mTextToWork.getXform()?.getWidth().toFixed(2) + 'x' + this.mTextToWork.getXform()?.getHeight().toFixed(2));
+        }
     }
 }
 
 export default MyGame;
 
 window.addEventListener('load', () => {
-    engine.init("GLCanvas");
+    engine.init('GLCanvas');
 
     const myGame = new MyGame();
     myGame.start();

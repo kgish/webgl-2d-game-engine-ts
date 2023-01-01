@@ -7,8 +7,8 @@
  *    => the associated xml descriptor file
  */
 
-import * as texture from './texture.js';
-import * as xml from './xml.js';
+import * as texture from './texture';
+import * as xml from './xml';
 
 const kImageExt = '.png';  // extension for the bitmap font image
 const kDescExt = '.fnt';   // extension for the bitmap font description

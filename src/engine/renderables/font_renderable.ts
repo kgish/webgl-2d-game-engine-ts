@@ -5,10 +5,10 @@
  *
  */
 
-import Transform from '../transform.js';
-import SpriteRenderable from './sprite_renderable.js';
-import * as defaultResources from '../resources/default_resources.js';
-import * as font from '../resources/font.js';
+import Transform from '../transform';
+import SpriteRenderable from './sprite_renderable';
+import * as defaultResources from '../resources/default_resources';
+import * as font from '../resources/font';
 import Camera from '../camera';
 
 class FontRenderable {

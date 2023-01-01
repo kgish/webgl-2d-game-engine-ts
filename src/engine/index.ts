@@ -12,6 +12,8 @@ import * as audio from './resources/audio';
 import * as text from './resources/text';
 import * as xml from './resources/xml';
 import * as texture from './resources/texture';
+import * as font from './resources/font';
+import * as defaultResources from './resources/default_resources';
 
 // General utilities
 import * as input from './input';
@@ -22,9 +24,9 @@ import Transform from './transform';
 // Renderables
 import Renderable from './renderables/renderable';
 import TextureRenderable from './renderables/texture_renderable';
-import SpriteRenderable from './renderables/sprite_renderable';
+import SpriteRenderable, { eTexCoordArrayIndex } from './renderables/sprite_renderable';
 import SpriteAnimateRenderable, { eAnimationType } from './renderables/sprite_animate_renderable';
-import { eTexCoordArrayIndex } from './renderables/sprite_renderable';
+import FontRenderable from './renderables/font_renderable';
 
 // Local to this file only
 import * as glSys from './core/gl';
@@ -36,16 +38,18 @@ import * as loop from './core/loop';
 function init(htmlCanvasID: string) {
     glSys.init(htmlCanvasID);
     vertexBuffer.init();
-    shaderResources.init();
     input.init();
     audio.init();
+    shaderResources.init();
+    defaultResources.init();
 }
 
 function cleanUp() {
     loop.cleanUp();
+    shaderResources.cleanUp();
+    defaultResources.cleanUp();
     audio.cleanUp();
     input.cleanUp();
-    shaderResources.cleanUp();
     vertexBuffer.cleanUp();
     glSys.cleanUp();
 }
@@ -62,7 +66,7 @@ function clearCanvas(color: number[]) {
 
 export default {
     // Resource support
-    audio, text, xml, texture,
+    audio, text, xml, texture, font, defaultResources,
 
     // Input support
     input,
@@ -71,8 +75,7 @@ export default {
     Camera, Scene, Transform,
 
     // Renderables
-    Renderable, TextureRenderable,
-    SpriteRenderable, SpriteAnimateRenderable,
+    Renderable, TextureRenderable, SpriteRenderable, SpriteAnimateRenderable, FontRenderable,
 
     // Constants
     eTexCoordArrayIndex, eAnimationType,
